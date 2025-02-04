@@ -6,6 +6,8 @@ import org.mailgrupo13.vidcla.Inventario.parabrisa.services.CategoriaPService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -15,6 +17,12 @@ public class CategoriaController {
     @Autowired
     private CategoriaPService categoriaService;
 
+
+
+    @GetMapping
+    public List<CategoriaDTO> findAll(){
+        return categoriaService.findAll();
+    }
 
     @GetMapping("/{id}")
     public CategoriaDTO FindById(@PathVariable  UUID id) {
@@ -27,8 +35,13 @@ public class CategoriaController {
 
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> delete(@PathVariable  UUID id) {
-        return categoriaService.delete(id); }
+    public ResponseEntity<?> delete(@PathVariable  UUID id) {
+        return  categoriaService.delete(id);
+
+    }
+
+
+
 
 
 }

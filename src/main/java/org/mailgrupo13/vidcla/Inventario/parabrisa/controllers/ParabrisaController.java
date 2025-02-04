@@ -49,12 +49,12 @@ public class ParabrisaController {
             ))
     })
     @GetMapping("/{id}")
-    public Optional<ParabrisaDTO> FindById(@PathVariable UUID id) {
+    public ParabrisaDTO FindById(@PathVariable UUID id) {
          return windshieldService.findById(id);
     }
 
 
-    @Operation(summary = "crear un parabrisa",
+    /*@Operation(summary = "crear un parabrisa",
             description = "no es necesario enviar el creadoen y actualizaden omitir esos valores ",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     content = @Content(mediaType = "application/json",
@@ -63,16 +63,17 @@ public class ParabrisaController {
                             )
                     )
             )
-    )
+    )*/
     @PostMapping
     public ParabrisaDTO createParabrisa(@Valid @RequestBody ParabrisaDTO windshieldDTO) {
+        System.out.println(windshieldDTO.toString() + "llega el dto");
         return windshieldService.create(windshieldDTO);
 
     }
 
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateWindshield(@PathVariable UUID id, @Valid @RequestBody ParabrisaDTO windshieldDTO) {
+    public ParabrisaDTO updateWindshield(@PathVariable UUID id, @Valid @RequestBody ParabrisaDTO windshieldDTO) {
         return windshieldService.update(id, windshieldDTO);
     }
 
@@ -80,8 +81,9 @@ public class ParabrisaController {
 
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteWindshield(@PathVariable UUID id) {
-       return windshieldService.delete(id);
+    public ResponseEntity<?> deleteWindshield(@PathVariable UUID id) {
+
+        return windshieldService.delete(id);
     }
 
 

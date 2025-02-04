@@ -8,5 +8,5 @@ import java.util.UUID;
 
 public interface ProveedorRepository extends JpaRepository<Proveedor, UUID> {
 
-    Optional<Proveedor> findByNombreempresa(String nombreempresa);
+     Optional<Proveedor> findByNombreempresa(String nombreempresa);
 }

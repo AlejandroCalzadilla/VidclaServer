@@ -3,6 +3,7 @@ package org.mailgrupo13.vidcla.Inventario.parabrisa;
 import org.mailgrupo13.vidcla.Inventario.parabrisa.dto.PosicionPDTO;
 import org.mailgrupo13.vidcla.Inventario.parabrisa.services.PosicionPService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,6 +27,14 @@ public class PosicionController {
     }
 
 
+    @GetMapping
+    public java.util.List<PosicionPDTO> findAll(){
+        return posicionPService.findAll();
+    }
+
+
+
+
     @PostMapping
     public PosicionPDTO create(@RequestBody PosicionPDTO categoriaPDTO) {
         return posicionPService.create(categoriaPDTO);
@@ -33,8 +42,8 @@ public class PosicionController {
 
 
     @DeleteMapping("/{id}")
-    public String delete(@PathVariable  UUID id) {
-        return posicionPService.delete(id).getBody();
+    public ResponseEntity<?> delete(@PathVariable  UUID id) {
+        return posicionPService.delete(id);
     }
 
 }
