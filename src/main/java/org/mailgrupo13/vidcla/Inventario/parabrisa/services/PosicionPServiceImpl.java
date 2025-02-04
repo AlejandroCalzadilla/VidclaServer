@@ -1,6 +1,8 @@
 package org.mailgrupo13.vidcla.Inventario.parabrisa.services;
 
+import org.mailgrupo13.vidcla.Inventario.parabrisa.dto.CategoriaDTO;
 import org.mailgrupo13.vidcla.Inventario.parabrisa.dto.PosicionPDTO;
+import org.mailgrupo13.vidcla.Inventario.parabrisa.entities.CategoriaP;
 import org.mailgrupo13.vidcla.Inventario.parabrisa.entities.PosicionP;
 import org.mailgrupo13.vidcla.Inventario.parabrisa.repositories.PosicionPRepository;
 import org.mailgrupo13.vidcla.validations.ResourceAlreadyExistsException;
@@ -9,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -33,14 +37,22 @@ public class PosicionPServiceImpl implements  PosicionPService {
     }
 
 
-
+    @Override
+    public List<PosicionPDTO> findAll(){
+        List<PosicionP> categorias=posicionPRepository.findAll();
+        List<PosicionPDTO> posicionPDTO=new ArrayList<>();
+        for(PosicionP posicionP:categorias){
+            posicionPDTO.add(convertToDTO(posicionP));
+        }
+        return posicionPDTO;
+    }
 
 
     @Override
-    public ResponseEntity<String> delete(UUID id) {
+    public ResponseEntity<?> delete(UUID id) {
         Optional<PosicionP> categoriaP = posicionPRepository.findById(id);
         if (categoriaP.isPresent())
-            return ResponseEntity.status(200).body("CategoriaP eliminada exitosamente");
+            return ResponseEntity.noContent().build();
          else
             throw new ResourceNotFoundException("CategoriaP con id " + id + " no encontrada");
     }

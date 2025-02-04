@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -37,15 +39,25 @@ public class CategoriaPServiceImpl implements  CategoriaPService{
 
 
 
+     @Override
+     public List<CategoriaDTO> findAll(){
+         List<CategoriaP> categorias=categoriaPRepository.findAll();
+         List<CategoriaDTO> categoriasDTO=new ArrayList<>();
+         for(CategoriaP categoria:categorias){
+             categoriasDTO.add(convertToDTO(categoria));
+         }
+         return categoriasDTO;
+     }
+
 
 
 
     @Override
-    public ResponseEntity<String> delete(UUID id) {
+    public ResponseEntity<?> delete(UUID id) {
         Optional<CategoriaP> categoriaP = categoriaPRepository.findById(id);
         if (categoriaP.isPresent()) {
             categoriaPRepository.deleteById(id);
-            return ResponseEntity.status(200).body("CategoriaP eliminada exitosamente");
+            return ResponseEntity.ok("CategoriaP eliminada exitosamente");
         } else {
             throw new ResourceNotFoundException("CategoriaP con id " + id + " no encontrada");
         }
@@ -78,6 +90,7 @@ public class CategoriaPServiceImpl implements  CategoriaPService{
        CategoriaP categoriaP=new CategoriaP();
          categoriaP.setId(categoriaPDTO.getId());
             categoriaP.setNombre(categoriaPDTO.getNombre());
+            categoriaP.setCodigo(categoriaPDTO.getCodigo());
         return categoriaP;
     }
 

@@ -6,11 +6,11 @@ import org.mailgrupo13.vidcla.Inventario.parabrisa.entities.Parabrisa;
 import org.mailgrupo13.vidcla.Inventario.parabrisa.entities.PosicionP;
 import org.mailgrupo13.vidcla.Inventario.parabrisa.repositories.ParabrisaRepository;
 import org.mailgrupo13.vidcla.Inventario.parabrisa.repositories.PosicionPRepository;
+import org.mailgrupo13.vidcla.Inventario.vehiculo.services.VehiculoServiceImpl;
 import org.mailgrupo13.vidcla.validations.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -32,6 +32,9 @@ public class ParabrisaServiceImpl implements ParabrisaService {
     @Autowired
     private PosicionPServiceImpl posicionPService;
 
+    @Autowired
+    private VehiculoServiceImpl vehiculoService;
+
 
     @Override
     public List<ParabrisaDTO> findAll() {
@@ -45,10 +48,10 @@ public class ParabrisaServiceImpl implements ParabrisaService {
 
 
     @Override
-    public Optional<ParabrisaDTO> findById(UUID id) {
-        return Optional.ofNullable(parabrisaRepository.findById(id)
+    public ParabrisaDTO findById(UUID id) {
+        return parabrisaRepository.findById(id)
                 .map(this::convertToDTO)
-                .orElseThrow(() -> new ResourceNotFoundException("parabirsa con  id " + id + " no encontrado")));
+                .orElseThrow(() -> new ResourceNotFoundException("parabirsa con  id " + id + " no encontrado"));
     }
 
 
@@ -59,10 +62,10 @@ public class ParabrisaServiceImpl implements ParabrisaService {
         Parabrisa parabrisa = convertToEntity(parabrisaDTO);
         CategoriaP categoriaP = categoriaPService.convertToEntity(categoriaPService.findById(parabrisaDTO.getCategoriaId()));
         PosicionP posicionP = posicionPService.convertToEntity(posicionPService.findById(parabrisaDTO.getPosicionId()));
-        parabrisa.setCategoria(categoriaP);
-        parabrisa.setPosicion(posicionP);
-        parabrisa = parabrisaRepository.save(parabrisa);
-        return convertToDTO(parabrisa);
+
+        Parabrisa parabrisa2 = parabrisaRepository.save(parabrisa);
+        return convertToDTO(parabrisa2);
+
     }
 
 
@@ -71,10 +74,10 @@ public class ParabrisaServiceImpl implements ParabrisaService {
 
 
     @Override
-    public ResponseEntity<String> update(UUID id, ParabrisaDTO parabrisaDTO) {
+    public ParabrisaDTO update(UUID id, ParabrisaDTO parabrisaDTO) {
         Optional<Parabrisa> existeParabrisa = parabrisaRepository.findById(id);
         if (!existeParabrisa.isPresent()) {
-            return ResponseEntity.badRequest().body("Parabrisa con id " + id + " no existe");
+            throw new ResourceNotFoundException("Parabrisa con id " + id + " no encontrado");
         }
         else {
             CategoriaP categoriaP=categoriaPService.convertToEntity(categoriaPService.findById(parabrisaDTO.getCategoriaId()));
@@ -87,25 +90,27 @@ public class ParabrisaServiceImpl implements ParabrisaService {
             parabrisa.setMedio(parabrisaDTO.getMedio());
             parabrisa.setCostado(parabrisaDTO.getCostado());
             parabrisa.setObservacion(parabrisaDTO.getObservacion());
-            parabrisaRepository.save(parabrisa);
-            return ResponseEntity.ok("Parabrisa con  id " + id + " a sido actulizado");
+            Parabrisa p= parabrisaRepository.save(parabrisa);
+            return convertToDTO(p);
         }
+
     }
 
 
     @Override
-    public ResponseEntity<String> delete(UUID id) {
+    public ResponseEntity<?> delete(UUID id) {
+        Parabrisa parabrisa = parabrisaRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Parabrisa con id " + id + " no encontrado"));
         parabrisaRepository.deleteById(id);
-        return ResponseEntity.ok("Parabrisa " + id + "a sido eliminado");
+        return ResponseEntity.noContent().build();
     }
 
 
 
 
 
-
-    private ParabrisaDTO convertToDTO(Parabrisa parabrisa) {
-        return new ParabrisaDTO(
+    public ParabrisaDTO convertToDTO(Parabrisa parabrisa) {
+        ParabrisaDTO p=new ParabrisaDTO(
                 parabrisa.getId(),
                 parabrisa.getArriba(),
                 parabrisa.getAbajo(),
@@ -114,20 +119,26 @@ public class ParabrisaServiceImpl implements ParabrisaService {
                 parabrisa.getObservacion(),
                 parabrisa.getCategoria().getId(),
                 parabrisa.getPosicion().getId(),
-                parabrisa.getCreadoEn(),
-                parabrisa.getActualizadoEn()
-        );
+                parabrisa.getVehiculo().getId()
+         );
+        p.setActualizadoEn(parabrisa.getActualizadoEn());
+        p.setCreadoEn(parabrisa.getCreadoEn());
+        return p;
     }
 
 
-
-    private Parabrisa convertToEntity(ParabrisaDTO windshieldDTO) {
+    @Override
+    public Parabrisa convertToEntity(ParabrisaDTO windshieldDTO) {
         Parabrisa parabrisa = new Parabrisa();
         parabrisa.setArriba(windshieldDTO.getArriba());
         parabrisa.setAbajo(windshieldDTO.getAbajo());
         parabrisa.setMedio(windshieldDTO.getMedio());
         parabrisa.setCostado(windshieldDTO.getCostado());
         parabrisa.setObservacion(windshieldDTO.getObservacion());
+        parabrisa.setCategoria(categoriaPService.convertToEntity(categoriaPService.findById(windshieldDTO.getCategoriaId())));
+        parabrisa.setPosicion(posicionPService.convertToEntity(posicionPService.findById(windshieldDTO.getPosicionId())));
+        parabrisa.setVehiculo(vehiculoService.convertToEntity(vehiculoService.findById(windshieldDTO.getVehiculoId())));
+
         return parabrisa;
     }
 }

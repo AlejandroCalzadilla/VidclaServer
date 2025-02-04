@@ -2,6 +2,7 @@ package org.mailgrupo13.vidcla.Inventario.parabrisa.entities;
 
 import jakarta.persistence.*;
 import org.mailgrupo13.vidcla.Inventario.almacen.entities.AlmacenParabrisa;
+import org.mailgrupo13.vidcla.Inventario.vehiculo.entities.Vehiculo;
 import org.mailgrupo13.vidcla.compras.notacompra.entities.DetalleNotaCompra;
 
 import java.time.LocalDateTime;
@@ -32,6 +33,22 @@ public class Parabrisa {
     @JoinColumn(name = "categoriap_id", nullable = false)
     private CategoriaP categoria;
 
+    public List<AlmacenParabrisa> getAlmacenParabrisas() {
+        return almacenParabrisas;
+    }
+
+    public Vehiculo getVehiculo() {
+        return vehiculo;
+    }
+
+    public void setVehiculo(Vehiculo vehiculo) {
+        this.vehiculo = vehiculo;
+    }
+
+    public void setAlmacenParabrisas(List<AlmacenParabrisa> almacenParabrisas) {
+        this.almacenParabrisas = almacenParabrisas;
+    }
+
     @ManyToOne
     @JoinColumn(name = "posicionp_id", nullable = false)
     private PosicionP posicion;
@@ -41,6 +58,13 @@ public class Parabrisa {
 
     @OneToMany(mappedBy = "parabrisa")
     private  List<DetalleNotaCompra> detalleNotaCompras;
+
+
+    @ManyToOne
+    @JoinColumn(name = "vehiculo_id", nullable = false)
+    private Vehiculo vehiculo;
+
+
 
 
 

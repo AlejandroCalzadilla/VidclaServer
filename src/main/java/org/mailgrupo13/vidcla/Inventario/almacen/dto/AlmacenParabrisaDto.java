@@ -11,10 +11,17 @@ public class AlmacenParabrisaDto {
 
   private String codigo;
 
-    public AlmacenParabrisaDto(UUID id, Integer stock, String codigo) {
+  private UUID parabrisaId;
+
+  private  UUID almacenId;
+
+    public AlmacenParabrisaDto(UUID id, Integer stock, String codigo, UUID parabrisaId, UUID almacenId) {
         this.id = id;
         this.stock = stock;
         this.codigo = codigo;
+        this.parabrisaId=parabrisaId;
+        this.almacenId=almacenId;
+
     }
 
     public UUID getId() {
@@ -39,5 +46,21 @@ public class AlmacenParabrisaDto {
 
     public void setCodigo(String codigo) {
         this.codigo = codigo;
+    }
+
+    public UUID getParabrisaId() {
+        return parabrisaId;
+    }
+
+    public void setParabrisaId(UUID parabrisaId) {
+        this.parabrisaId = parabrisaId;
+    }
+
+    public UUID getAlmacenId() {
+        return almacenId;
+    }
+
+    public void setAlmacenId(UUID almacenId) {
+        this.almacenId = almacenId;
     }
 }

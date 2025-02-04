@@ -26,6 +26,7 @@ public class Proveedor {
   @OneToMany(mappedBy = "proveedor")
   private List<NotaCompra> notasCompra;
 
+
   @PrePersist
   protected void onCreate() {
     this.creadoEn = java.time.LocalDateTime.now();

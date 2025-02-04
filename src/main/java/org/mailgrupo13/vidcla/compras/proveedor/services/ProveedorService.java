@@ -1,6 +1,7 @@
 package org.mailgrupo13.vidcla.compras.proveedor.services;
 
 import org.apache.coyote.Response;
+import org.mailgrupo13.vidcla.compras.proveedor.Proveedor;
 import org.mailgrupo13.vidcla.compras.proveedor.dtos.ProveedorDTO;
 import org.springframework.http.ResponseEntity;
 
@@ -13,8 +14,9 @@ public interface ProveedorService {
     public ProveedorDTO create( ProveedorDTO  proveedorDTO);
     public List<ProveedorDTO> findAll();
     public ProveedorDTO findById(UUID id);
-    public ResponseEntity<String> delete(UUID id);
-    public  ResponseEntity<String> update(UUID id, ProveedorDTO proveedorDTO);
-
+    public ResponseEntity<?> delete(UUID id);
+    public  ProveedorDTO update(UUID id, ProveedorDTO proveedorDTO);
+    public ProveedorDTO convertToDTO(Proveedor proveedor);
+    public Proveedor convertToEntity(ProveedorDTO proveedorDTO);
 
 }

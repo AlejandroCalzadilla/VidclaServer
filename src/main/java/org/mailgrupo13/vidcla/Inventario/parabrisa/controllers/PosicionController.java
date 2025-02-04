@@ -1,4 +1,4 @@
-package org.mailgrupo13.vidcla.Inventario.parabrisa;
+package org.mailgrupo13.vidcla.Inventario.parabrisa.controllers;
 
 import org.mailgrupo13.vidcla.Inventario.parabrisa.dto.PosicionPDTO;
 import org.mailgrupo13.vidcla.Inventario.parabrisa.services.PosicionPService;

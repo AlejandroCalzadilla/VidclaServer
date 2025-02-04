@@ -37,7 +37,8 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register( @RequestBody User user, BindingResult result) {
-        user.setAdmin(false);
+        System.out.println("aver llega o ni siquiera esa");
+        user.setAdmin(true);
         return create(user, result);
     }
 

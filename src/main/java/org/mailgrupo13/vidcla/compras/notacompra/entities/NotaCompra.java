@@ -2,6 +2,7 @@ package org.mailgrupo13.vidcla.compras.notacompra.entities;
 
 
 import jakarta.persistence.*;
+import org.mailgrupo13.vidcla.Inventario.almacen.entities.Almacen;
 import org.mailgrupo13.vidcla.compras.proveedor.Proveedor;
 
 import java.math.BigDecimal;
@@ -31,18 +32,35 @@ public class NotaCompra {
 
    private LocalDateTime creadoEn;
 
-
    private LocalDateTime actualizadoEn;
+
+
+
+
 
     @ManyToOne
     @JoinColumn(name = "proveedor_id", nullable = false)
     private Proveedor proveedor;
 
 
+    @ManyToOne
+    @JoinColumn(name = "almacen_id", nullable = false)
+    private Almacen almacen;
+
+
+
+
     @OneToMany(mappedBy = "notaCompra")
     private List<DetalleNotaCompra> detalleNotaCompras;
 
 
+    public Almacen getAlmacen() {
+        return almacen;
+    }
+
+    public void setAlmacen(Almacen almacen) {
+        this.almacen = almacen;
+    }
 
     @PrePersist
     protected void onCreate() {
@@ -98,5 +116,35 @@ public class NotaCompra {
         this.estado = estado;
     }
 
+    public LocalDateTime getCreadoEn() {
+        return creadoEn;
+    }
 
+    public void setCreadoEn(LocalDateTime creadoEn) {
+        this.creadoEn = creadoEn;
+    }
+
+    public LocalDateTime getActualizadoEn() {
+        return actualizadoEn;
+    }
+
+    public void setActualizadoEn(LocalDateTime actualizadoEn) {
+        this.actualizadoEn = actualizadoEn;
+    }
+
+    public Proveedor getProveedor() {
+        return proveedor;
+    }
+
+    public void setProveedor(Proveedor proveedor) {
+        this.proveedor = proveedor;
+    }
+
+    public List<DetalleNotaCompra> getDetalleNotaCompras() {
+        return detalleNotaCompras;
+    }
+
+    public void setDetalleNotaCompras(List<DetalleNotaCompra> detalleNotaCompras) {
+        this.detalleNotaCompras = detalleNotaCompras;
+    }
 }

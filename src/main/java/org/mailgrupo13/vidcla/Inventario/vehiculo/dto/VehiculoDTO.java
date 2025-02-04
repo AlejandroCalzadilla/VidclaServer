@@ -6,8 +6,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.mailgrupo13.vidcla.imagenes.Imagen;
-import org.mailgrupo13.vidcla.Inventario.vehiculo.enums.Tipo;
-import org.mailgrupo13.vidcla.Inventario.vehiculo.enums.Marca;
+
 public class VehiculoDTO {
 
     private UUID id;

@@ -9,10 +9,11 @@ import java.util.UUID;
 
 public interface MarcaVService {
 
-    public MarcaVDTO create(MarcaVDTO marcaVDTO);
-    public MarcaVDTO findById(UUID id);
-    public ResponseEntity<String> delete(UUID id);
-    public MarcaV convertToEntity(MarcaVDTO marcaVDTO);
+     MarcaVDTO create(MarcaVDTO marcaVDTO);
+        ResponseEntity<List<MarcaVDTO>> findAll();
+     MarcaVDTO findById(UUID id);
+     ResponseEntity<?> delete(UUID id);
+     MarcaV convertToEntity(MarcaVDTO marcaVDTO);
 
 
 

@@ -8,14 +8,24 @@ public class MarcaVDTO {
     private UUID id;
     private  String nombre;
     private String pais;
+    private Integer codigo;
     private LocalDateTime creadoEn;
     private LocalDateTime actualizadoEn;
 
-    public MarcaVDTO(UUID id, String nombre, String pais) {
+    public MarcaVDTO(UUID id, String nombre, String pais,Integer codigo) {
         this.id=id;
         this.nombre = nombre;
         this.pais = pais;
+        this.codigo=codigo;
 
+    }
+
+    public Integer getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(Integer codigo) {
+        this.codigo = codigo;
     }
 
     public String getNombre() {

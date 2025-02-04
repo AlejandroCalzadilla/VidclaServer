@@ -33,8 +33,6 @@ public class ParabrisaDTO {
 
     private String observacion;
 
-
-
     private LocalDateTime creadoEn;
 
     private LocalDateTime actualizadoEn;
@@ -44,15 +42,19 @@ public class ParabrisaDTO {
 
     private  UUID posicionId;
 
+    private  UUID vehiculoId;
 
 
+    public UUID getVehiculoId() {
+        return vehiculoId;
+    }
 
-
-
-
+    public void setVehiculoId(UUID vehiculoId) {
+        this.vehiculoId = vehiculoId;
+    }
 
     // Constructor
-    public ParabrisaDTO(UUID id, float arriba, float abajo, float costado, float medio, String observacion, UUID categoryw_id, UUID positionw_id, LocalDateTime creadoEn, LocalDateTime actualizadoEn) {
+    public ParabrisaDTO(UUID id, float arriba, float abajo, float costado, float medio, String observacion, UUID categoryw_id, UUID positionw_id, UUID vehiculoId) {
         this.id = id;
         this.arriba = arriba;
         this.abajo = abajo;
@@ -61,8 +63,7 @@ public class ParabrisaDTO {
         this.observacion = observacion;
         this.categoriaId = categoryw_id;
         this.posicionId = positionw_id;
-        this.creadoEn = creadoEn;
-        this.actualizadoEn = actualizadoEn;
+       this.vehiculoId=vehiculoId;
 
 
     }
@@ -166,6 +167,9 @@ public class ParabrisaDTO {
                 ", observacion='" + observacion + '\'' +
                 ", creadoEn=" + creadoEn +
                 ", actualizadoEn=" + actualizadoEn +
+                ", categoriaId=" + categoriaId +
+                ", posicionId=" + posicionId +
+                ", vehiculoId=" + vehiculoId +
                 '}';
     }
 

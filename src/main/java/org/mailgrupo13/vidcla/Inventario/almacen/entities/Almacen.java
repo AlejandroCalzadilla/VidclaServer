@@ -1,13 +1,13 @@
 package org.mailgrupo13.vidcla.Inventario.almacen.entities;
 
 import jakarta.persistence.*;
+import org.mailgrupo13.vidcla.compras.notacompra.entities.NotaCompra;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Table(name = "almacen")
 public class Almacen {
 
  @Id
@@ -19,9 +19,16 @@ public class Almacen {
 
   private String direccion;
 
+  @Column(nullable = false)
+  private Integer capacidad;
+
    private LocalDateTime creadoEn;
 
    private  LocalDateTime actualizadoEn;
+
+    @OneToMany(mappedBy = "almacen")
+    private List<NotaCompra> notasCompra;
+
 
 
 
@@ -41,9 +48,13 @@ public class Almacen {
     private List<AlmacenParabrisa> almacenParabrisas;
 
 
+    public LocalDateTime getCreadoEn() {
+        return creadoEn;
+    }
 
-  @Column(nullable = false)
-    private String capacidad;
+    public LocalDateTime getActualizadoEn() {
+        return actualizadoEn;
+    }
 
     public UUID getId() {
         return id;
@@ -69,11 +80,15 @@ public class Almacen {
         this.direccion = direccion;
     }
 
-    public String getCapacidad() {
+    public Integer getCapacidad() {
         return capacidad;
     }
 
-    public void setCapacidad(String capacidad) {
+    public void setCapacidad(Integer capacidad) {
         this.capacidad = capacidad;
     }
+
+
+
+
 }

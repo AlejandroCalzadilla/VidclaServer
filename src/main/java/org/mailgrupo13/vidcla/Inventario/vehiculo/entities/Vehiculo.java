@@ -2,10 +2,10 @@ package org.mailgrupo13.vidcla.Inventario.vehiculo.entities;
 
 
 import jakarta.persistence.*;
-import org.mailgrupo13.vidcla.Inventario.vehiculo.enums.Tipo;
-import org.mailgrupo13.vidcla.Inventario.vehiculo.enums.Marca;
+import org.mailgrupo13.vidcla.Inventario.parabrisa.entities.Parabrisa;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 
@@ -19,17 +19,18 @@ public class Vehiculo {
     private String Descripcion;
     private String year_inicio;
     private String year_fin;
-    private Tipo Tipo;
-    private Marca Marca;
     private LocalDateTime creadoEn;
     private LocalDateTime actualizadoEn;
-
 
 
 
     @ManyToOne
     @JoinColumn(name = "marcaV_id", nullable = false)
     private MarcaV marcaV;
+
+
+     @OneToMany(mappedBy = "vehiculo")
+    private List<Parabrisa> parabrisas;
 
 
 

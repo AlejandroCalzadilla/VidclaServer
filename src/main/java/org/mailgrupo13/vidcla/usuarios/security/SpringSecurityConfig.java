@@ -47,11 +47,8 @@ public class SpringSecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/user").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/user/register").permitAll()
                         .requestMatchers(HttpMethod.GET, "/swagger-ui/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/v3/api-docs/**").permitAll()// .requestMatchers(HttpMethod.POST, "/api/users").hasRole("ADMIN")
-                        // .requestMatchers(HttpMethod.GET, "/api/products", "/api/products/{id}").hasAnyRole("ADMIN", "USER")
-                        // .requestMatchers(HttpMethod.POST, "/api/products").hasRole("ADMIN")
-                        // .requestMatchers(HttpMethod.PUT, "/api/products/{id}").hasRole("ADMIN")
-                        // .requestMatchers(HttpMethod.DELETE, "/api/products/{id}").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/v3/api-docs/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/categoriap/**").permitAll() // Permitir acceso a los endpoints de categoría
                         .anyRequest().authenticated())
                 .addFilter(new JwtAuthenticationFilter(authenticationManager()))
                 .addFilter(new JwtValidationFilter(authenticationManager()))
@@ -60,6 +57,9 @@ public class SpringSecurityConfig {
                 .sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .build();
     }
+
+
+
 
     @Bean
     CorsConfigurationSource corsConfigurationSource() {

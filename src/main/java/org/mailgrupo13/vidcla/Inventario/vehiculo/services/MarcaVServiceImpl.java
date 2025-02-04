@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -28,10 +30,11 @@ public class MarcaVServiceImpl implements  MarcaVService{
             throw new ResourceAlreadyExistsException("CategoriaP con nombre " + marcaVDTO.getNombre() + " ya existe");
         }
         MarcaV marcaV = convertToEntity(marcaVDTO);
+        System.out.println(marcaV.getPais()+ "aver llega el pais servicio");
         marcaV.setCreadoEn(LocalDateTime.now());
         marcaV.setActualizadoEn(LocalDateTime.now());
-        marcaV = marcaVRepository.save(marcaV);
-        return convertToDTO(marcaV);
+       MarcaV marca = marcaVRepository.save(marcaV);
+        return convertToDTO(marca);
 
 
     }
@@ -47,21 +50,38 @@ public class MarcaVServiceImpl implements  MarcaVService{
 
 
     @Override
-    public ResponseEntity<String> delete(UUID id) {
-        Optional<MarcaV> categoriaP = marcaVRepository.findById(id);
-        if (categoriaP.isPresent()) {
-            marcaVRepository.deleteById(id);
-            return ResponseEntity.status(200).body("Marca de Vehiculo eliminada exitosamente");
-        } else {
-            throw new ResourceNotFoundException("Marca con id " + id + " no encontrada");
+    public ResponseEntity<List<MarcaVDTO>> findAll(){
+        List<MarcaV> categorias=marcaVRepository.findAll();
+        if(categorias.isEmpty()){
+            return ResponseEntity.noContent().build();
         }
+        List<MarcaVDTO> categoriasDTO=new ArrayList<>();
+        for(MarcaV categoriaP:categorias){
+            categoriasDTO.add(convertToDTO(categoriaP));
+        }
+        return ResponseEntity.ok(categoriasDTO);
+    }
+
+
+    @Override
+    public ResponseEntity<?> delete(UUID id) {
+        Optional<MarcaV> existingCategoria = marcaVRepository.findById(id);
+        if (!existingCategoria.isPresent()) {
+            throw new ResourceNotFoundException("CategoriaP con id " + id + " no encontrada");
+        }
+        marcaVRepository.deleteById(id);
+        return ResponseEntity.ok().build();
     }
 
 
 
 
     private MarcaVDTO convertToDTO(MarcaV categoriaP){
-        return new MarcaVDTO(categoriaP.getId(), categoriaP.getNombre(),categoriaP.getPais());
+
+        return new MarcaVDTO(categoriaP.getId(),
+                categoriaP.getNombre(),
+                categoriaP.getPais(),
+                categoriaP.getCodigo());
     }
 
 
@@ -73,6 +93,7 @@ public class MarcaVServiceImpl implements  MarcaVService{
         categoriaP.setId(marcaVDTO.getId());
         categoriaP.setNombre(marcaVDTO.getNombre());
         categoriaP.setPais(marcaVDTO.getPais());
+        categoriaP.setCodigo(marcaVDTO.getCodigo());
         return categoriaP;
     }
 

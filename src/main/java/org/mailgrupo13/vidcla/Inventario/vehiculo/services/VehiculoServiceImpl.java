@@ -1,6 +1,4 @@
 package org.mailgrupo13.vidcla.Inventario.vehiculo.services;
-
-import org.mailgrupo13.vidcla.Inventario.vehiculo.dto.MarcaVDTO;
 import org.mailgrupo13.vidcla.Inventario.vehiculo.dto.VehiculoDTO;
 import org.mailgrupo13.vidcla.Inventario.vehiculo.entities.MarcaV;
 import org.mailgrupo13.vidcla.Inventario.vehiculo.entities.Vehiculo;
@@ -11,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -26,8 +25,10 @@ public class VehiculoServiceImpl implements VehiculoService {
 
 
     @Override
-    public VehiculoDTO FindById(UUID id) {
-        return null;
+    public VehiculoDTO findById(UUID id) {
+        Vehiculo vehiculo = vehiculoRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Vehiculo con id " + id + " no encontrado"));
+        return convertToDTO(vehiculo);
     }
 
 
@@ -35,7 +36,7 @@ public class VehiculoServiceImpl implements VehiculoService {
 
 
     @Override
-    public VehiculoDTO Create(VehiculoDTO vehiculoDTO) {
+    public VehiculoDTO create(VehiculoDTO vehiculoDTO) {
         MarcaV marca=marcaVService.convertToEntity(marcaVService.findById(vehiculoDTO.getMarcaId()));
         Vehiculo vehiculo = convertToEntity(vehiculoDTO);
         vehiculo.setMarca(marca);
@@ -45,15 +46,17 @@ public class VehiculoServiceImpl implements VehiculoService {
         return convertToDTO(vehiculo);
     }
 
-
-
+    @Override
+    public ResponseEntity<List<VehiculoDTO>> FindAll() {
+        return null;
+    }
 
 
     @Override
-    public ResponseEntity<String> Update(UUID id, VehiculoDTO vehiculoDTO) {
+    public VehiculoDTO update(UUID id, VehiculoDTO vehiculoDTO) {
         Optional<Vehiculo> existeVehiculo = vehiculoRepository.findById(id);
         if (!existeVehiculo.isPresent()) {
-            return ResponseEntity.badRequest().body("Vehiculo: " +vehiculoDTO.getDescripcion() +"con id: " +id + " no existe");
+                 throw   new ResourceNotFoundException("Almacen con id " + id + " no encontrado");
         } else {
             MarcaV marca=marcaVService.convertToEntity(marcaVService.findById(vehiculoDTO.getMarcaId()));
             Vehiculo vehiculo = existeVehiculo.get();
@@ -63,8 +66,8 @@ public class VehiculoServiceImpl implements VehiculoService {
             vehiculo.setMarca(marca);
             vehiculo.setCreadoEn(existeVehiculo.get().getCreadoEn());
             vehiculo.setActualizadoEn(LocalDateTime.now());
-            vehiculoRepository.save(vehiculo);
-            return ResponseEntity.ok("Vehiculo: " + vehiculoDTO.getDescripcion() + " fue actualizado");
+            vehiculo =   vehiculoRepository.save(vehiculo);
+            return convertToDTO(vehiculo);
         }
     }
 
@@ -72,22 +75,28 @@ public class VehiculoServiceImpl implements VehiculoService {
 
 
     @Override
-    public ResponseEntity<String> Delete(UUID id) {
+    public ResponseEntity<?> delete(UUID id) {
         Vehiculo vehiculo = vehiculoRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Vehiculo con id " + id + " no encontrado"));
         vehiculoRepository.deleteById(id);
         return  ResponseEntity.ok("Vehiculo: "+vehiculo.getDescripcion() + "eliminado");
     }
 
-
-
-
     @Override
-    public List<VehiculoDTO> FindAll() {
-        return vehiculoRepository.findAll().stream()
-                .map(this::convertToDTO)
-                .collect(java.util.stream.Collectors.toList());
+    public ResponseEntity<List<VehiculoDTO>> findAll() {
+        List<Vehiculo> vehiculos = vehiculoRepository.findAll();
+        if (vehiculos.isEmpty())
+            return ResponseEntity.noContent().build(); //204  np content
+
+        List<VehiculoDTO> vehiculosDTO = new ArrayList<>();
+        for (Vehiculo vehiculo : vehiculos) {
+            vehiculosDTO.add(convertToDTO(vehiculo));
+        }
+        return ResponseEntity.ok(vehiculosDTO);
     }
+
+
+
 
 
 
@@ -106,7 +115,9 @@ public class VehiculoServiceImpl implements VehiculoService {
                 );
     }
 
-    private Vehiculo convertToEntity(VehiculoDTO vehiculoDTO) {
+
+
+    public Vehiculo convertToEntity(VehiculoDTO vehiculoDTO) {
         Vehiculo vehiculo = new Vehiculo();
         vehiculo.setId(vehiculoDTO.getId());
         vehiculo.setDescripcion(vehiculoDTO.getDescripcion());

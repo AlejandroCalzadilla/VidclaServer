@@ -1,6 +1,6 @@
-package org.mailgrupo13.vidcla.compras.proveedor;
+package org.mailgrupo13.vidcla.compras.proveedor.repositories;
 
-import org.mailgrupo13.vidcla.Inventario.parabrisa.entities.CategoriaP;
+import org.mailgrupo13.vidcla.compras.proveedor.Proveedor;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

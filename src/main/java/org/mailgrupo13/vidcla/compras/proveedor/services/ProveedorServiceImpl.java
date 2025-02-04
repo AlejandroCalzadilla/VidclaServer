@@ -1,7 +1,7 @@
 package org.mailgrupo13.vidcla.compras.proveedor.services;
 
 import org.mailgrupo13.vidcla.compras.proveedor.Proveedor;
-import org.mailgrupo13.vidcla.compras.proveedor.ProveedorRepository;
+import org.mailgrupo13.vidcla.compras.proveedor.repositories.ProveedorRepository;
 import org.mailgrupo13.vidcla.compras.proveedor.dtos.ProveedorDTO;
 import org.mailgrupo13.vidcla.validations.ResourceAlreadyExistsException;
 import org.mailgrupo13.vidcla.validations.ResourceNotFoundException;
@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -54,15 +53,29 @@ public class ProveedorServiceImpl implements ProveedorService{
     }
 
     @Override
-    public ResponseEntity<String> update(UUID id, ProveedorDTO proveedorDTO) {
-        return null;
+    public ProveedorDTO update(UUID id, ProveedorDTO proveedorDTO) {
+        Proveedor proveedor = proveedorRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("CategoriaP con id " + id + " no encontrada"));
+
+        Optional<Proveedor> existingAlmacen = proveedorRepository.findByNombreempresa(proveedorDTO.getNombreempresa());
+        if (existingAlmacen.isPresent() && !existingAlmacen.get().getId().equals(id)) {
+            throw new ResourceAlreadyExistsException("proveedor con nombre_empresa " + proveedorDTO.getNombreempresa() + " ya existe");
+        }
+
+        proveedor.setNombreempresa(proveedorDTO.getNombreempresa());
+        proveedor.setNombreencargado(proveedorDTO.getNombreencargado());
+        proveedor.setDireccion(proveedorDTO.getDireccion());
+        proveedor.setNumero(proveedorDTO.getNumero());
+        proveedor.setCorreo(proveedorDTO.getCorreo());
+        Proveedor p=  proveedorRepository.save(proveedor);
+        return convertToDTO(p);
     }
 
 
     @Override
     public org.mailgrupo13.vidcla.compras.proveedor.dtos.ProveedorDTO findById(UUID id) {
         Proveedor categoria= proveedorRepository.findById(id)
-                .orElseThrow(()-> new ResourceNotFoundException("CategoriaP con id " + id + " no encontrada"));
+                .orElseThrow(()-> new ResourceNotFoundException("Proveedor con id " + id + " no encontrada"));
         return  convertToDTO(categoria);
     }
 
@@ -76,7 +89,7 @@ public class ProveedorServiceImpl implements ProveedorService{
 
 
 
-    private ProveedorDTO convertToDTO(Proveedor categoriaP){
+    public ProveedorDTO convertToDTO(Proveedor categoriaP){
         return new ProveedorDTO(categoriaP.getId(),
                                   categoriaP.getNombreempresa(),
                                   categoriaP.getNombreencargado(),

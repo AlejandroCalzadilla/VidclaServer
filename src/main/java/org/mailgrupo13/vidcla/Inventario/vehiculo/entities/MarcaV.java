@@ -18,12 +18,28 @@ public class MarcaV {
 
     private  String nombre;
     private String pais;
+    private Integer codigo;
     private LocalDateTime creadoEn;
     private LocalDateTime actualizadoEn;
 
     @OneToMany(mappedBy = "marcaV")
     private List<Vehiculo> parabrisas;
 
+    public Integer getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(Integer codigo) {
+        this.codigo = codigo;
+    }
+
+    public List<Vehiculo> getParabrisas() {
+        return parabrisas;
+    }
+
+    public void setParabrisas(List<Vehiculo> parabrisas) {
+        this.parabrisas = parabrisas;
+    }
 
     public UUID getId() {
         return id;
@@ -46,7 +62,7 @@ public class MarcaV {
     }
 
     public void setPais(String pais) {
-        pais = pais;
+        this.pais = pais;
     }
 
     public LocalDateTime getCreadoEn() {
