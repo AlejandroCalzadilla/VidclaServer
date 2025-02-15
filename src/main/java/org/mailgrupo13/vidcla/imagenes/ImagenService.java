@@ -1,5 +1,6 @@
 package org.mailgrupo13.vidcla.imagenes;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class ImagenService {
@@ -22,20 +24,25 @@ public class ImagenService {
     @Value("${upload.dir}")
     private String uploadDir;
 
+
+    @Autowired
+    private ImagenRepository imagenRepository;
+
+
     private static final List<String> ALLOWED_TYPES = Arrays.asList("image/jpeg", "image/png", "image/gif");
     private static final long MAX_SIZE = 2 * 1024 * 1024; // 2 MB
 
-    public ResponseEntity<String> CargarImagen(MultipartFile file) {
+    public String CargarImagen(MultipartFile file) {
         if (file.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Please select a file to upload.");
+             ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Please select a file to upload.");
         }
 
         if (!ALLOWED_TYPES.contains(file.getContentType())) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Only JPEG, PNG, and GIF files are allowed.");
+             ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Only JPEG, PNG, and GIF files are allowed.");
         }
 
         if (file.getSize() > MAX_SIZE) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("File size exceeds the 2 MB limit.");
+             ResponseEntity.status(HttpStatus.BAD_REQUEST).body("File size exceeds the 2 MB limit.");
         }
 
         try {
@@ -47,14 +54,16 @@ public class ImagenService {
 
             // Save the file locally
             byte[] bytes = file.getBytes();
-            Path path = Paths.get(uploadDir + "/" + file.getOriginalFilename());
+            String randomFileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
+            Path path = Paths.get(uploadDir + "/" + randomFileName);
             Files.write(path, bytes);
 
-            return ResponseEntity.status(HttpStatus.OK).body("File uploaded successfully: " + path.toString());
+            return randomFileName;
         } catch (IOException e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to upload file.");
+            ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to upload file.");
         }
+        return null;
     }
 
 
@@ -79,6 +88,14 @@ public class ImagenService {
     }
 
 
+
+    public ImagenDTO create(Imagen imagen) {
+        return convertToDTO(imagenRepository.save(imagen));
+    }
+
+    public ImagenDTO convertToDTO(Imagen imagen) {
+        return new ImagenDTO(imagen.getId(), imagen.getNombre(), imagen.getVehiculo().getId());
+    }
 
 
 

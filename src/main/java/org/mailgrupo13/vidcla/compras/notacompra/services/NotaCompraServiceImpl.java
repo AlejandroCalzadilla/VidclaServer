@@ -1,20 +1,17 @@
 package org.mailgrupo13.vidcla.compras.notacompra.services;
-
-import org.mailgrupo13.vidcla.Inventario.almacen.entities.Almacen;
-import org.mailgrupo13.vidcla.Inventario.almacen.services.AlmacenService;
-import org.mailgrupo13.vidcla.Inventario.parabrisa.services.ParabrisaService;
-import org.mailgrupo13.vidcla.compras.notacompra.dtos.NotaCompraDTO;
-import org.mailgrupo13.vidcla.compras.notacompra.entities.DetalleNotaCompra;
-import org.mailgrupo13.vidcla.compras.notacompra.entities.NotaCompra;
-import org.mailgrupo13.vidcla.compras.notacompra.repositories.NotaCompraRepository;
-import org.mailgrupo13.vidcla.compras.proveedor.Proveedor;
-import org.mailgrupo13.vidcla.compras.proveedor.services.ProveedorService;
-import org.mailgrupo13.vidcla.validations.ResourceAlreadyExistsException;
-import org.mailgrupo13.vidcla.validations.ResourceNotFoundException;
+import org.mailgrupo13.vidcla.Inventario.almacen.entities.*;
+import org.mailgrupo13.vidcla.Inventario.almacen.services.*;
+import org.mailgrupo13.vidcla.compras.notacompra.dtos.*;
+import org.mailgrupo13.vidcla.compras.notacompra.entities.*;
+import org.mailgrupo13.vidcla.compras.notacompra.repositories.*;
+import org.mailgrupo13.vidcla.compras.proveedor.*;
+import org.mailgrupo13.vidcla.compras.proveedor.services.*;
+import org.mailgrupo13.vidcla.validations.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
-
+import org.springframework.transaction.annotation.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -33,42 +30,37 @@ public class NotaCompraServiceImpl implements NotaCompraService{
     private AlmacenService almacenService;
 
     @Autowired
-    private ParabrisaService parabrisaService;
-
-    @Autowired
-    private DetalleNotaCompraService dNCompraService;
-
-
+    private DetalleNotaCompraService detalleNotaCompraService;
 
     @Override
     public ResponseEntity<List<NotaCompraDTO>> findAll() {
-        // Implementation here
         return null;
     }
 
 
-
-
     @Override
-    public NotaCompra create(NotaCompraDTO notaCompraDTO) {
+    @Transactional
+    public NotaCompraDTO create(NotaCompraDTO notaCompraDTO) {
         checkIfNotaCompraExistsByNumero(notaCompraDTO.getNumero());
+        Proveedor proveedor = proveedorService.convertToEntity(proveedorService.findById(notaCompraDTO.getProveedorId()));
+        Almacen almacen = almacenService.convertToEntity(almacenService.findById(notaCompraDTO.getAlmacenId()));
         NotaCompra notaCompra = convertToEntity(notaCompraDTO);
         notaCompra = notaCompraRepository.save(notaCompra);
-
-        // Guarda cada DetalleNotaCompra
-        NotaCompra finalNotaCompra = notaCompra;
-        notaCompraDTO.getDetalleNotaCompraDTO().forEach(detalleDTO -> {
-            DetalleNotaCompra detalle = dNCompraService.convertToEntity(detalleDTO);
-            detalle.setNotaCompra(finalNotaCompra);
-            dNCompraService.create(detalleDTO);
-        });
-
-        return notaCompra;
+        List<DetalleNotaCompra> detalles = new ArrayList<>();
+        for (DetalleNotaCompraDTO detalleDTO : notaCompraDTO.getDetalleNotaCompraDTO()) {
+            detalleNotaCompraService.create(notaCompra,detalleDTO);
+        }
+        return convertToDTO(notaCompra);
     }
+
+
+
+
 
     @Override
     public NotaCompraDTO update(UUID id, NotaCompraDTO notaCompraDTO) {
-        NotaCompra notaCompra = findNotaCompraById(id);
+        NotaCompra notaCompra = notaCompraRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("NotaCompra con id " + id + " no encontrado"));
         checkIfNotaCompraExistsByNumeroAndDifferentId(notaCompraDTO.getNumero(), id);
 
         notaCompra.setNumero(notaCompraDTO.getNumero());
@@ -89,37 +81,26 @@ public class NotaCompraServiceImpl implements NotaCompraService{
 
 
 
-    private NotaCompra findNotaCompraById(UUID id) {
-        return notaCompraRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("NotaCompra con id " + id + " no encontrado"));
-    }
-
 
 
     @Override
     public NotaCompraDTO findById(UUID id) {
-
         return notaCompraRepository.findById(id)
                 .map(this::convertToDTO)
                 .orElseThrow(() -> new ResourceNotFoundException("NotaCompra con id " + id + " no encontrado"));
     }
 
     @Override
-    public ResponseEntity<?> delete(UUID id) {
+    public void delete(UUID id) {
+        NotaCompra notaCompra = notaCompraRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("NotaCompra con id " + id + " no encontrado"));
+        if ( notaCompra == null) {
+          ResponseEntity.status(HttpStatus.NOT_FOUND).body("NotaCompra con id " + id + " no encontrado");
+        }
+        notaCompraRepository.delete(notaCompra);
 
-        return null;
+
     }
-
-
-
-
-
-
-
-
-
-
-
 
 
     @Override
@@ -133,7 +114,7 @@ public class NotaCompraServiceImpl implements NotaCompraService{
                 notaCompra.getProveedor().getId(),
                 notaCompra.getAlmacen().getId(),
                 notaCompra.getDetalleNotaCompras().stream()
-                        .map(dNCompraService::convertToDTO)
+                        .map(detalleNotaCompraService::convertToDTO)
                         .collect(Collectors.toList())
         );
     }
@@ -152,6 +133,10 @@ public class NotaCompraServiceImpl implements NotaCompraService{
         notaCompra.setEstado(notaCompraDTO.getEstado());
         notaCompra.setProveedor(proveedor);
         notaCompra.setAlmacen(almacen);
+       notaCompra.setDetalleNotaCompras(notaCompraDTO.getDetalleNotaCompraDTO().stream()
+                .map(detalleNotaCompraService::convertToEntity)
+                .collect(Collectors.toList())
+        );
 
         return notaCompra;
     }
@@ -160,19 +145,14 @@ public class NotaCompraServiceImpl implements NotaCompraService{
     private void checkIfNotaCompraExistsByNumero(Integer numero) {
         Optional<NotaCompra> existingNotaCompra = notaCompraRepository.findByNumero(numero);
         if (existingNotaCompra.isPresent()) {
-            throw new ResourceAlreadyExistsException("NotaCompra con numero " + numero + " ya existe");
+           ResponseEntity.status(HttpStatus.CONFLICT).body("NotaCompra con numero " + numero + " ya existe");
         }
     }
 
     private void checkIfNotaCompraExistsByNumeroAndDifferentId(Integer numero, UUID id) {
         Optional<NotaCompra> existingNotaCompra = notaCompraRepository.findByNumero(numero);
         if (existingNotaCompra.isPresent() && !existingNotaCompra.get().getId().equals(id)) {
-            throw new ResourceAlreadyExistsException("NotaCompra con numero " + numero + " ya existe");
+            ResponseEntity.status(HttpStatus.CONFLICT).body("NotaCompra con numero " + numero + " ya existe");
         }
     }
-
-
-
-
-
 }

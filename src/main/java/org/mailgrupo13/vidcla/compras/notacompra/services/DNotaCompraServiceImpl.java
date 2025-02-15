@@ -1,18 +1,23 @@
 package org.mailgrupo13.vidcla.compras.notacompra.services;
 
+
 import org.mailgrupo13.vidcla.Inventario.almacen.dto.AlmacenParabrisaDto;
+import org.mailgrupo13.vidcla.Inventario.almacen.entities.AlmacenParabrisa;
 import org.mailgrupo13.vidcla.Inventario.almacen.services.AlmacenParabrisaService;
-import org.mailgrupo13.vidcla.Inventario.almacen.services.AlmacenParabrisaServiceImpl;
 import org.mailgrupo13.vidcla.Inventario.almacen.services.AlmacenService;
 import org.mailgrupo13.vidcla.Inventario.parabrisa.dto.ParabrisaDTO;
+import org.mailgrupo13.vidcla.Inventario.parabrisa.entities.Parabrisa;
+import org.mailgrupo13.vidcla.Inventario.parabrisa.entities.PosicionP;
 import org.mailgrupo13.vidcla.Inventario.parabrisa.services.ParabrisaService;
+import org.mailgrupo13.vidcla.Inventario.parabrisa.services.PosicionPService;
 import org.mailgrupo13.vidcla.compras.notacompra.dtos.DetalleNotaCompraDTO;
 import org.mailgrupo13.vidcla.compras.notacompra.entities.DetalleNotaCompra;
 import org.mailgrupo13.vidcla.compras.notacompra.entities.NotaCompra;
 import org.mailgrupo13.vidcla.compras.notacompra.repositories.DetalleNotaCompraRepository;
-import org.mailgrupo13.vidcla.validations.ResourceAlreadyExistsException;
+import org.mailgrupo13.vidcla.compras.notacompra.repositories.NotaCompraRepository;
 import org.mailgrupo13.vidcla.validations.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -36,8 +41,8 @@ public class DNotaCompraServiceImpl implements DetalleNotaCompraService{
     private ParabrisaService parabrisaService;
 
 
-   /* @Autowired
-    private NotaCompraService notaCompraService;*/
+   @Autowired
+   private NotaCompraRepository notaCompraRepository;
 
 
     @Autowired
@@ -45,15 +50,34 @@ public class DNotaCompraServiceImpl implements DetalleNotaCompraService{
 
 
 
-    @Override
-    public DetalleNotaCompraDTO create(DetalleNotaCompraDTO detalleNotaCompraDTO) {
-        Optional<DetalleNotaCompra> existingCategoria =dettallerepo.findByParabrisaId(detalleNotaCompraDTO.getParabrisadId());
-        if (existingCategoria.isPresent())
-            throw new ResourceAlreadyExistsException("CategoriaP con nombre " + detalleNotaCompraDTO.getParabrisadId() + " ya existe");
 
-        DetalleNotaCompra categoriaP = convertToEntity(detalleNotaCompraDTO);
-        categoriaP = dettallerepo.save(categoriaP);
-        return convertToDTO(categoriaP);
+
+
+    @Override
+    public DetalleNotaCompraDTO create(NotaCompra notaCompra,DetalleNotaCompraDTO detalleNotaCompraDTO) {
+        DetalleNotaCompra detalle = convertToEntity(detalleNotaCompraDTO);
+        AlmacenParabrisaDto almacenParabrisa = almacenParabrisaService.findByParabrisaIdAndAlmacenId(detalleNotaCompraDTO.getParabrisadId() , notaCompra.getAlmacen().getId());
+        if(almacenParabrisa==null){
+            AlmacenParabrisa almacennew= new AlmacenParabrisa();
+            Parabrisa parabrisa=parabrisaService.convertToEntity(parabrisaService.findById(detalleNotaCompraDTO.getParabrisadId()));
+            almacennew.setParabrisa(parabrisa);
+            almacennew.setAlmacen(almacenService.convertToEntity(almacenService.findById(notaCompra.getAlmacen().getId())));
+            almacennew.setStock(detalleNotaCompraDTO.getCanitdad());
+            almacennew.setCodigo(parabrisa.getPosicion().getCodigo()+"-"+
+                    notaCompra.getProveedor().getNumero()+
+                    parabrisa.getVehiculo().getMarca().getCodigo()+
+                    parabrisa.getCategoria().getCodigo());
+            almacenParabrisaService.create(almacenParabrisaService.convertToDTO(almacennew));
+            detalle.setNotaCompra(notaCompra);
+            detalle = dettallerepo.save(detalle);
+            return convertToDTO(detalle);
+        }
+
+        almacenParabrisa.setStock(almacenParabrisa.getStock()+detalleNotaCompraDTO.getCanitdad());
+        almacenParabrisaService.update(almacenParabrisa.getId(),almacenParabrisa);
+        detalle.setNotaCompra(notaCompra);
+        detalle = dettallerepo.save(detalle);
+        return convertToDTO(detalle);
     }
 
 
@@ -146,15 +170,13 @@ public class DNotaCompraServiceImpl implements DetalleNotaCompraService{
 
     @Override
     public DetalleNotaCompra convertToEntity(DetalleNotaCompraDTO detalleNotaCompraDTO) {
-      /*  NotaCompra notaCompra =notaCompraService.convertToEntity(notaCompraService.findById(detalleNotaCompraDTO.getNotaCompraId()));
-        DetalleNotaCompra categoriaP = new DetalleNotaCompra();
-        categoriaP.setId(detalleNotaCompraDTO.getId());
-        categoriaP.setCanitdad(detalleNotaCompraDTO.getCanitdad());
-        categoriaP.setPrecio(detalleNotaCompraDTO.getPrecio());
-        categoriaP.setNotaCompra(notaCompra);
-        categoriaP.setParabrisa(parabrisaService.convertToEntity(parabrisaService.findById(detalleNotaCompraDTO.getParabrisadId())));
-        return categoriaP;*/
-        return null;
+        DetalleNotaCompra detalleNotaCompra = new DetalleNotaCompra();
+        detalleNotaCompra.setId(detalleNotaCompraDTO.getId());
+        detalleNotaCompra.setCanitdad(detalleNotaCompraDTO.getCanitdad());
+        detalleNotaCompra.setPrecio(detalleNotaCompraDTO.getPrecio());
+        detalleNotaCompra.setParabrisa(parabrisaService.convertToEntity(parabrisaService.findById(detalleNotaCompraDTO.getParabrisadId())));
+        // NotaCompra will be set later to avoid circular reference
+        return detalleNotaCompra;
     }
 
 }

@@ -162,4 +162,23 @@ public class Parabrisa {
     public void setActualizadoEn(LocalDateTime actualizadoEn) {
         this.actualizadoEn = actualizadoEn;
     }
+
+    @Override
+    public String toString() {
+        return "Parabrisa{" +
+                "id=" + id +
+                ", arriba=" + arriba +
+                ", abajo=" + abajo +
+                ", costado=" + costado +
+                ", medio=" + medio +
+                ", observacion='" + observacion + '\'' +
+                ", creadoEn=" + creadoEn +
+                ", actualizadoEn=" + actualizadoEn +
+                ", categoria=" + categoria +
+                ", posicion=" + posicion +
+                ", almacenParabrisas=" + almacenParabrisas +
+                ", detalleNotaCompras=" + detalleNotaCompras +
+                ", vehiculo=" + vehiculo +
+                '}';
+    }
 }

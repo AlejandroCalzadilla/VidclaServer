@@ -62,7 +62,6 @@ public class ParabrisaServiceImpl implements ParabrisaService {
         Parabrisa parabrisa = convertToEntity(parabrisaDTO);
         CategoriaP categoriaP = categoriaPService.convertToEntity(categoriaPService.findById(parabrisaDTO.getCategoriaId()));
         PosicionP posicionP = posicionPService.convertToEntity(posicionPService.findById(parabrisaDTO.getPosicionId()));
-
         Parabrisa parabrisa2 = parabrisaRepository.save(parabrisa);
         return convertToDTO(parabrisa2);
 
@@ -106,6 +105,10 @@ public class ParabrisaServiceImpl implements ParabrisaService {
     }
 
 
+    public Parabrisa save(Parabrisa parabrisa) {
+        return parabrisaRepository.save(parabrisa);
+    }
+
 
 
 
@@ -130,6 +133,7 @@ public class ParabrisaServiceImpl implements ParabrisaService {
     @Override
     public Parabrisa convertToEntity(ParabrisaDTO windshieldDTO) {
         Parabrisa parabrisa = new Parabrisa();
+        parabrisa.setId(windshieldDTO.getId());
         parabrisa.setArriba(windshieldDTO.getArriba());
         parabrisa.setAbajo(windshieldDTO.getAbajo());
         parabrisa.setMedio(windshieldDTO.getMedio());

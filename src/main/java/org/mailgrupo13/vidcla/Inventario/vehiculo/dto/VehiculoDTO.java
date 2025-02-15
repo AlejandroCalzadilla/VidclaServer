@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.mailgrupo13.vidcla.imagenes.Imagen;
+import org.mailgrupo13.vidcla.imagenes.ImagenDTO;
 
 public class VehiculoDTO {
 
@@ -16,11 +17,11 @@ public class VehiculoDTO {
     private LocalDateTime creadoEn;
     private LocalDateTime actualizadoEn;
     private UUID marcaId;
+    private String codigo;
+    private List<ImagenDTO> imagenes;
 
-    //private List<Imagen> imagenes;
 
-
-    public VehiculoDTO(UUID id, String descripcion, String year_inicio, String year_fin, UUID marca, LocalDateTime creadoEn, LocalDateTime actualizadoEn) {
+    public VehiculoDTO(UUID id, String descripcion, String year_inicio, String year_fin, UUID marca, LocalDateTime creadoEn, LocalDateTime actualizadoEn,String codigo ,List<ImagenDTO> imagenes) {
         this.id = id;
         Descripcion = descripcion;
         this.year_inicio = year_inicio;
@@ -28,7 +29,8 @@ public class VehiculoDTO {
        this.marcaId=marca;
         this.creadoEn = creadoEn;
         this.actualizadoEn = actualizadoEn;
-        //this.imagenes = imagenes;
+        this.codigo=codigo;
+        this.imagenes=imagenes;
     }
 
     public UUID getId() {
@@ -86,5 +88,25 @@ public class VehiculoDTO {
 
     public void setMaracaId(UUID maracaId) {
         this.marcaId = maracaId;
+    }
+
+    public void setMarcaId(UUID marcaId) {
+        this.marcaId = marcaId;
+    }
+
+    public List<ImagenDTO> getImagenes() {
+        return imagenes;
+    }
+
+    public void setImagenes(List<ImagenDTO> imagenes) {
+        this.imagenes = imagenes;
+    }
+
+    public String getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
     }
 }

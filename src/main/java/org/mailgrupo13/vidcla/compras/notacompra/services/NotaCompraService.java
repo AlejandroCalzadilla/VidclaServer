@@ -18,7 +18,7 @@ public interface NotaCompraService {
      * -return 400 si no se puede crear el registro , validaciones
      */
 
-    public NotaCompra create(NotaCompraDTO notaCompraDTO);
+    public NotaCompraDTO create(NotaCompraDTO notaCompraDTO);
 
 
 
@@ -62,7 +62,7 @@ public interface NotaCompraService {
      * -return 202 ok si se elimina correctamente
      * -return 404 si no se encuentra el registro
      */
-    public ResponseEntity<?> delete(UUID id);
+    public void delete(UUID id);
 
 
 

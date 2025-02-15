@@ -1,10 +1,5 @@
 package org.mailgrupo13.vidcla.compras.notacompra.dtos;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
@@ -39,7 +34,6 @@ public class NotaCompraDTO {
         this.estado = estado;
         this.proveedorId = proveedorId;
         this.almacenId = almacenId;
-
         this.detalleNotaCompraDTO = detalleNotaCompraDTO;
 
     }
@@ -128,5 +122,21 @@ public class NotaCompraDTO {
 
     public void setDetalleNotaCompraDTO(List<DetalleNotaCompraDTO> detalleNotaCompraDTO) {
         this.detalleNotaCompraDTO = detalleNotaCompraDTO;
+    }
+
+    @Override
+    public String toString() {
+        return "NotaCompraDTO{" +
+                "id=" + id +
+                ", numero=" + numero +
+                ", fecha='" + fecha + '\'' +
+                ", total=" + total +
+                ", estado='" + estado + '\'' +
+                ", proveedorId=" + proveedorId +
+                ", almacenId=" + almacenId +
+                ", actualizadoEn='" + actualizadoEn + '\'' +
+                ", creadoEn='" + creadoEn + '\'' +
+                ", detalleNotaCompraDTO=" + detalleNotaCompraDTO +
+                '}';
     }
 }

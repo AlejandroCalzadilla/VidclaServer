@@ -3,8 +3,10 @@ package org.mailgrupo13.vidcla.Inventario.vehiculo.entities;
 
 import jakarta.persistence.*;
 import org.mailgrupo13.vidcla.Inventario.parabrisa.entities.Parabrisa;
+import org.mailgrupo13.vidcla.imagenes.Imagen;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -21,6 +23,7 @@ public class Vehiculo {
     private String year_fin;
     private LocalDateTime creadoEn;
     private LocalDateTime actualizadoEn;
+    private String codigo;
 
 
 
@@ -33,7 +36,53 @@ public class Vehiculo {
     private List<Parabrisa> parabrisas;
 
 
+    @OneToMany(mappedBy = "vehiculo", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Imagen> imagenes =new ArrayList<>();
 
+
+    @PrePersist
+    protected void onCreate() {
+        this.creadoEn = java.time.LocalDateTime.now();
+        this.actualizadoEn = java.time.LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        this.actualizadoEn = java.time.LocalDateTime.now();
+    }
+
+
+    public List<Imagen> getImagenes() {
+        return imagenes;
+    }
+
+    public void setImagenes(List<Imagen> imagenes) {
+        this.imagenes = imagenes;
+    }
+
+    public String getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
+    }
+
+    public MarcaV getMarcaV() {
+        return marcaV;
+    }
+
+    public void setMarcaV(MarcaV marcaV) {
+        this.marcaV = marcaV;
+    }
+
+    public List<Parabrisa> getParabrisas() {
+        return parabrisas;
+    }
+
+    public void setParabrisas(List<Parabrisa> parabrisas) {
+        this.parabrisas = parabrisas;
+    }
 
     public UUID getId() {
         return id;

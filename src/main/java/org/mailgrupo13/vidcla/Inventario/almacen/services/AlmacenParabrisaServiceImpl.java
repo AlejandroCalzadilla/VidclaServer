@@ -104,9 +104,12 @@ public class AlmacenParabrisaServiceImpl implements AlmacenParabrisaService{
 
     @Override
     public AlmacenParabrisaDto findByParabrisaIdAndAlmacenId(UUID parabrisaId, UUID almacenId) {
-        AlmacenParabrisa almacenParabrisa = AlmacenPRepository.findByParabrisaIdAndAlmacenId(parabrisaId, almacenId)
-                .orElseThrow(() -> new ResourceNotFoundException("AlmacenParabrisa with parabrisaId " + parabrisaId + " and almacenId " + almacenId + " not found"));
-        return convertToDTO(almacenParabrisa);
+        Optional<AlmacenParabrisa> almacenParabrisa = AlmacenPRepository.findByParabrisaIdAndAlmacenId(parabrisaId, almacenId);
+        if (almacenParabrisa.isPresent()) {
+            return convertToDTO(almacenParabrisa.get());
+        } else {
+            return null;
+        }
     }
 
     @Override

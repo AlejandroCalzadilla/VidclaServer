@@ -3,10 +3,15 @@ import org.mailgrupo13.vidcla.Inventario.vehiculo.dto.VehiculoDTO;
 import org.mailgrupo13.vidcla.Inventario.vehiculo.entities.MarcaV;
 import org.mailgrupo13.vidcla.Inventario.vehiculo.entities.Vehiculo;
 import org.mailgrupo13.vidcla.Inventario.vehiculo.repositories.VehiculoRepository;
+import org.mailgrupo13.vidcla.imagenes.Imagen;
+import org.mailgrupo13.vidcla.imagenes.ImagenDTO;
+import org.mailgrupo13.vidcla.imagenes.ImagenRepository;
+import org.mailgrupo13.vidcla.imagenes.ImagenService;
 import org.mailgrupo13.vidcla.validations.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -24,6 +29,13 @@ public class VehiculoServiceImpl implements VehiculoService {
     private  MarcaVService marcaVService;
 
 
+    @Autowired
+    private ImagenService imagenService;
+
+    @Autowired
+    private ImagenRepository imagenRepository;
+
+
     @Override
     public VehiculoDTO findById(UUID id) {
         Vehiculo vehiculo = vehiculoRepository.findById(id)
@@ -36,14 +48,34 @@ public class VehiculoServiceImpl implements VehiculoService {
 
 
     @Override
-    public VehiculoDTO create(VehiculoDTO vehiculoDTO) {
-        MarcaV marca=marcaVService.convertToEntity(marcaVService.findById(vehiculoDTO.getMarcaId()));
+    public VehiculoDTO create(VehiculoDTO vehiculoDTO, List<MultipartFile> imagenes) {
+        MarcaV marca = marcaVService.convertToEntity(marcaVService.findById(vehiculoDTO.getMarcaId()));
         Vehiculo vehiculo = convertToEntity(vehiculoDTO);
         vehiculo.setMarca(marca);
-        vehiculo.setCreadoEn(LocalDateTime.now());
-        vehiculo.setActualizadoEn(LocalDateTime.now());
+        Optional<Vehiculo> lastVehiculo = vehiculoRepository.findTopByOrderByCodigoDesc();
+        int newCodigo = lastVehiculo.map(v -> Integer.parseInt(v.getCodigo()) + 1).orElse(marca.getCodigo());
+        vehiculo.setCodigo(String.valueOf(newCodigo));
         vehiculo = vehiculoRepository.save(vehiculo);
-        return convertToDTO(vehiculo);
+
+
+        List<ImagenDTO> imagenesVehiculo =new ArrayList<>();
+        // Save images if present
+        if (imagenes != null) {
+            for (MultipartFile file : imagenes) {
+                if (!file.isEmpty()) {
+                    Imagen imagen = new Imagen();
+                    imagen.setNombre(file.getOriginalFilename());
+                    imagen.setVehiculo(vehiculo);
+                    imagen.setNombre(imagenService.CargarImagen(file));
+                    imagenesVehiculo.add(imagenService.create(imagen));
+                }
+            }
+        }
+
+         VehiculoDTO vehiculoDTO1 = convertToDTO(vehiculo);
+         vehiculoDTO1.setImagenes(imagenesVehiculo);
+
+         return vehiculoDTO1;
     }
 
     @Override
@@ -104,6 +136,11 @@ public class VehiculoServiceImpl implements VehiculoService {
 
     private VehiculoDTO convertToDTO(Vehiculo vehiculo) {
 
+        List<ImagenDTO> imagenesDTO = new ArrayList<>();
+        for (Imagen imagen : vehiculo.getImagenes()) {
+            imagenesDTO.add(imagenService.convertToDTO(imagen));
+        }
+
         return new VehiculoDTO(
                 vehiculo.getId(),
                 vehiculo.getDescripcion(),
@@ -111,7 +148,10 @@ public class VehiculoServiceImpl implements VehiculoService {
                 vehiculo.getYear_fin(),
                 vehiculo.getMarca().getId(),
                 vehiculo.getCreadoEn(),
-                vehiculo.getActualizadoEn()
+                vehiculo.getActualizadoEn(),
+                vehiculo.getCodigo(),
+                imagenesDTO
+
                 );
     }
 

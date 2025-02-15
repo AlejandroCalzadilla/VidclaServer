@@ -6,7 +6,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.bind.MethodArgumentNotValidException;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -49,7 +49,7 @@ public class GlobalExceptionHandler {
 
     // Manejo de 409 (Conflict) para recursos ya existentes
     @ExceptionHandler(ResourceAlreadyExistsException.class)
-    public ResponseEntity<ApiResponse<Object>> handleResourceAlreadyExistsException(ResourceAlreadyExistsException ex, WebRequest request) {
+    public ResponseEntity<ApiResponse<Object>> ExceptionConflictos(ResourceAlreadyExistsException ex, WebRequest request) {
         return new ResponseEntity<>(
                 new ApiResponse<>(HttpStatus.CONFLICT.value(), ex.getMessage(), null),
                 HttpStatus.CONFLICT

@@ -29,6 +29,18 @@ public class DetalleNotaCompra {
     private Parabrisa parabrisa;
 
 
+    @PrePersist
+    protected void onCreate() {
+        this.creadoEn = java.time.LocalDateTime.now();
+        this.actualizadoEn = java.time.LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        this.actualizadoEn = java.time.LocalDateTime.now();
+    }
+
+
 
 
 
@@ -81,5 +93,18 @@ public class DetalleNotaCompra {
 
     public void setParabrisa(Parabrisa parabrisa) {
         this.parabrisa = parabrisa;
+    }
+
+    @Override
+    public String toString() {
+        return "DetalleNotaCompra{" +
+                "id=" + id +
+                ", canitdad=" + canitdad +
+                ", precio=" + precio +
+                ", creadoEn=" + creadoEn +
+                ", actualizadoEn=" + actualizadoEn +
+                ", notaCompra=" + notaCompra +
+                ", parabrisa=" + parabrisa +
+                '}';
     }
 }

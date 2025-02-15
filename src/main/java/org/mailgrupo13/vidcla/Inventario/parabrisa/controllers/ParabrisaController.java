@@ -88,10 +88,10 @@ public class ParabrisaController implements ParabrisaApiDoc {
 
 
 
-    @PostMapping("/upload")
+    /*@PostMapping("/upload")
     public ResponseEntity<String> uploadImage(@RequestParam("file") MultipartFile file) {
         return imagenesService.CargarImagen(file);
-    }
+    }*/
 
 
 

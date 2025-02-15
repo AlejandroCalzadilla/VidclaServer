@@ -69,8 +69,8 @@ public class DetalleNotaCompraDTO {
         return parabrisaId;
     }
 
-    public void setProductoId(UUID productoId) {
-        this.parabrisaId = productoId;
+    public void setParabrisaId(UUID parabrisaId) {
+        this.parabrisaId = parabrisaId;
     }
 
     public UUID getNotaCompraId() {
@@ -79,5 +79,18 @@ public class DetalleNotaCompraDTO {
 
     public void setNotaCompraId(UUID notaCompraId) {
         this.notaCompraId = notaCompraId;
+    }
+
+    @Override
+    public String toString() {
+        return "DetalleNotaCompraDTO{" +
+                "id=" + id +
+                ", canitdad=" + canitdad +
+                ", precio=" + precio +
+                ", creadoEn=" + creadoEn +
+                ", actualizadoEn=" + actualizadoEn +
+                ", parabrisaId=" + parabrisaId +
+                ", notaCompraId=" + notaCompraId +
+                '}';
     }
 }

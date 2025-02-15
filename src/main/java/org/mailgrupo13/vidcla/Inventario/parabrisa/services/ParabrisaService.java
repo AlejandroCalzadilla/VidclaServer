@@ -15,6 +15,7 @@ public interface ParabrisaService {
     ParabrisaDTO update(UUID id, ParabrisaDTO windshieldDTO);
     ResponseEntity<?> delete(UUID id);
     Parabrisa convertToEntity(ParabrisaDTO parabrisa);
+    Parabrisa save(Parabrisa parabrisa);
 
 
 

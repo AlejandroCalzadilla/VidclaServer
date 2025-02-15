@@ -7,6 +7,7 @@ import org.mailgrupo13.vidcla.compras.proveedor.Proveedor;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -51,7 +52,9 @@ public class NotaCompra {
 
 
     @OneToMany(mappedBy = "notaCompra")
-    private List<DetalleNotaCompra> detalleNotaCompras;
+    private List<DetalleNotaCompra> detalleNotaCompra=  new ArrayList<>();;
+
+
 
 
     public Almacen getAlmacen() {
@@ -141,10 +144,26 @@ public class NotaCompra {
     }
 
     public List<DetalleNotaCompra> getDetalleNotaCompras() {
-        return detalleNotaCompras;
+        return detalleNotaCompra;
     }
 
     public void setDetalleNotaCompras(List<DetalleNotaCompra> detalleNotaCompras) {
-        this.detalleNotaCompras = detalleNotaCompras;
+        this.detalleNotaCompra = detalleNotaCompras;
+    }
+
+    @Override
+    public String toString() {
+        return "NotaCompra{" +
+                "id=" + id +
+                ", numero=" + numero +
+                ", fecha='" + fecha + '\'' +
+                ", total=" + total +
+                ", estado='" + estado + '\'' +
+                ", creadoEn=" + creadoEn +
+                ", actualizadoEn=" + actualizadoEn +
+                ", proveedor=" + proveedor +
+                ", almacen=" + almacen +
+                ", detalleNotaCompras=" + detalleNotaCompra +
+                '}';
     }
 }

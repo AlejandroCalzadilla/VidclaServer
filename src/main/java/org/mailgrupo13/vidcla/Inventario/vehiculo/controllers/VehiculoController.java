@@ -4,9 +4,12 @@ package org.mailgrupo13.vidcla.Inventario.vehiculo.controllers;
 import org.mailgrupo13.vidcla.Inventario.vehiculo.dto.VehiculoDTO;
 import org.mailgrupo13.vidcla.Inventario.vehiculo.services.VehiculoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.UUID;
@@ -30,14 +33,18 @@ public class VehiculoController {
 
     }
 
-    @PostMapping
-    public VehiculoDTO create(@RequestBody  VehiculoDTO vehiculoDTO) {
-        return vehiculoService.create(vehiculoDTO);
-
+    @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<VehiculoDTO> createVehiculo(
+            @RequestPart("vehiculos") VehiculoDTO vehiculoDTO,
+            @RequestPart("imagenes") List<MultipartFile> imagenes) {
+        VehiculoDTO createdVehiculo = vehiculoService.create(vehiculoDTO, imagenes);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdVehiculo);
     }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable UUID id) {
+        System.out.println("id: "+id);
         return vehiculoService.delete(id);
     }
 
