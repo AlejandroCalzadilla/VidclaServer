@@ -9,5 +9,6 @@ import java.util.UUID;
 public interface MarcaVRepository extends JpaRepository<MarcaV, UUID> {
 
     Optional<MarcaV> findByNombre(String nombre);
+    Optional<MarcaV> findByCodigo(int codigo);
 
 }

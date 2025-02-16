@@ -2,8 +2,6 @@ package org.mailgrupo13.vidcla.Inventario.vehiculo.entities;
 
 
 import jakarta.persistence.*;
-import org.mailgrupo13.vidcla.Inventario.parabrisa.entities.Parabrisa;
-import org.mailgrupo13.vidcla.imagenes.Imagen;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -22,8 +20,8 @@ public class MarcaV {
     private LocalDateTime creadoEn;
     private LocalDateTime actualizadoEn;
 
-    @OneToMany(mappedBy = "marcaV")
-    private List<Vehiculo> parabrisas;
+    @OneToMany(mappedBy = "marcav")
+    private List<Vehiculo> vehiculos;
 
     public Integer getCodigo() {
         return codigo;
@@ -33,12 +31,12 @@ public class MarcaV {
         this.codigo = codigo;
     }
 
-    public List<Vehiculo> getParabrisas() {
-        return parabrisas;
+    public List<Vehiculo> getVehiculos() {
+        return vehiculos;
     }
 
-    public void setParabrisas(List<Vehiculo> parabrisas) {
-        this.parabrisas = parabrisas;
+    public void setVehiculos(List<Vehiculo> vehiculos) {
+        this.vehiculos = vehiculos;
     }
 
     public UUID getId() {

@@ -28,8 +28,8 @@ public class Vehiculo {
 
 
     @ManyToOne
-    @JoinColumn(name = "marcaV_id", nullable = false)
-    private MarcaV marcaV;
+    @JoinColumn(name = "marcav_id", nullable = false)
+    private MarcaV marcav;
 
 
      @OneToMany(mappedBy = "vehiculo")
@@ -39,6 +39,10 @@ public class Vehiculo {
     @OneToMany(mappedBy = "vehiculo", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Imagen> imagenes =new ArrayList<>();
 
+
+
+    @Version
+    private Integer version;
 
     @PrePersist
     protected void onCreate() {
@@ -69,11 +73,11 @@ public class Vehiculo {
     }
 
     public MarcaV getMarcaV() {
-        return marcaV;
+        return marcav;
     }
 
     public void setMarcaV(MarcaV marcaV) {
-        this.marcaV = marcaV;
+        this.marcav = marcaV;
     }
 
     public List<Parabrisa> getParabrisas() {
@@ -119,11 +123,11 @@ public class Vehiculo {
 
 
     public MarcaV getMarca() {
-        return this.marcaV;
+        return this.marcav;
     }
 
     public void setMarca(MarcaV marca) {
-        this.marcaV = marca;
+        this.marcav = marca;
     }
 
     public LocalDateTime getCreadoEn() {
@@ -142,5 +146,11 @@ public class Vehiculo {
         this.actualizadoEn = actualizadoEn;
     }
 
+    public Integer getVersion() {
+        return version;
+    }
 
+    public void setVersion(Integer version) {
+        this.version = version;
+    }
 }

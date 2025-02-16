@@ -52,7 +52,7 @@ public class VehiculoServiceImpl implements VehiculoService {
         MarcaV marca = marcaVService.convertToEntity(marcaVService.findById(vehiculoDTO.getMarcaId()));
         Vehiculo vehiculo = convertToEntity(vehiculoDTO);
         vehiculo.setMarca(marca);
-        Optional<Vehiculo> lastVehiculo = vehiculoRepository.findTopByOrderByCodigoDesc();
+        Optional<Vehiculo> lastVehiculo = vehiculoRepository.findTopByMarcaVIdOrderByCodigoDesc(marca.getId());
         int newCodigo = lastVehiculo.map(v -> Integer.parseInt(v.getCodigo()) + 1).orElse(marca.getCodigo());
         vehiculo.setCodigo(String.valueOf(newCodigo));
         vehiculo = vehiculoRepository.save(vehiculo);
