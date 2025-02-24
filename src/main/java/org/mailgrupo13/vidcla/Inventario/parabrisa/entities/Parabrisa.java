@@ -4,16 +4,18 @@ import jakarta.persistence.*;
 import org.mailgrupo13.vidcla.Inventario.almacen.entities.AlmacenParabrisa;
 import org.mailgrupo13.vidcla.Inventario.vehiculo.entities.Vehiculo;
 import org.mailgrupo13.vidcla.compras.notacompra.entities.DetalleNotaCompra;
-
+import lombok.*;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
-
 @Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Parabrisa {
-
-
 
     @Id
     @GeneratedValue(strategy= GenerationType.UUID)
@@ -23,31 +25,13 @@ public class Parabrisa {
     private  float costado;
     private float medio;
     private String observacion;
-
+    private BigDecimal precio;
     private LocalDateTime creadoEn;
-
-
     private LocalDateTime actualizadoEn;
 
     @ManyToOne
     @JoinColumn(name = "categoriap_id", nullable = false)
     private CategoriaP categoria;
-
-    public List<AlmacenParabrisa> getAlmacenParabrisas() {
-        return almacenParabrisas;
-    }
-
-    public Vehiculo getVehiculo() {
-        return vehiculo;
-    }
-
-    public void setVehiculo(Vehiculo vehiculo) {
-        this.vehiculo = vehiculo;
-    }
-
-    public void setAlmacenParabrisas(List<AlmacenParabrisa> almacenParabrisas) {
-        this.almacenParabrisas = almacenParabrisas;
-    }
 
     @ManyToOne
     @JoinColumn(name = "posicionp_id", nullable = false)
@@ -59,13 +43,13 @@ public class Parabrisa {
     @OneToMany(mappedBy = "parabrisa")
     private  List<DetalleNotaCompra> detalleNotaCompras;
 
-
     @ManyToOne
     @JoinColumn(name = "vehiculo_id", nullable = false)
     private Vehiculo vehiculo;
 
 
-
+    @Column
+    private String codigo;
 
 
     @PrePersist
@@ -74,111 +58,11 @@ public class Parabrisa {
         this.actualizadoEn = java.time.LocalDateTime.now();
     }
 
-
-
-
     @PreUpdate
     protected void onUpdate() {
         this.actualizadoEn = java.time.LocalDateTime.now();
     }
 
 
-    public CategoriaP getCategoria() {
-        return this.categoria;
-    }
 
-    public void setCategoria(CategoriaP categoria) {
-        this.categoria = categoria;
-    }
-
-    public PosicionP getPosicion() {
-        return posicion;
-    }
-
-    public void setPosicion(PosicionP posicion) {
-        this.posicion = posicion;
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public float getArriba() {
-        return arriba;
-    }
-
-    public void setArriba(float arriba) {
-        this.arriba = arriba;
-    }
-
-    public float getAbajo() {
-        return abajo;
-    }
-
-    public void setAbajo(float abajo) {
-        this.abajo = abajo;
-    }
-
-    public float getCostado() {
-        return costado;
-    }
-
-    public void setCostado(float costado) {
-        this.costado = costado;
-    }
-
-    public float getMedio() {
-        return medio;
-    }
-
-    public void setMedio(float medio) {
-        this.medio = medio;
-    }
-
-    public String getObservacion() {
-        return observacion;
-    }
-
-    public void setObservacion(String observacion) {
-        this.observacion = observacion;
-    }
-
-    public LocalDateTime getCreadoEn() {
-        return creadoEn;
-    }
-
-    public void setCreadoEn(LocalDateTime creadoEn) {
-        this.creadoEn = creadoEn;
-    }
-
-    public LocalDateTime getActualizadoEn() {
-        return actualizadoEn;
-    }
-
-    public void setActualizadoEn(LocalDateTime actualizadoEn) {
-        this.actualizadoEn = actualizadoEn;
-    }
-
-    @Override
-    public String toString() {
-        return "Parabrisa{" +
-                "id=" + id +
-                ", arriba=" + arriba +
-                ", abajo=" + abajo +
-                ", costado=" + costado +
-                ", medio=" + medio +
-                ", observacion='" + observacion + '\'' +
-                ", creadoEn=" + creadoEn +
-                ", actualizadoEn=" + actualizadoEn +
-                ", categoria=" + categoria +
-                ", posicion=" + posicion +
-                ", almacenParabrisas=" + almacenParabrisas +
-                ", detalleNotaCompras=" + detalleNotaCompras +
-                ", vehiculo=" + vehiculo +
-                '}';
-    }
 }

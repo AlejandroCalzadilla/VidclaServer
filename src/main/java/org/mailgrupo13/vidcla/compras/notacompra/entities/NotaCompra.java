@@ -22,8 +22,7 @@ public class NotaCompra {
     @Column(nullable = false)
     private Integer numero;
 
-    @Column(nullable = false)
-    private String fecha;
+
 
     private BigDecimal total;
 
@@ -95,13 +94,7 @@ public class NotaCompra {
         this.numero = numero;
     }
 
-    public String getFecha() {
-        return fecha;
-    }
 
-    public void setFecha(String fecha) {
-        this.fecha = fecha;
-    }
 
     public BigDecimal getTotal() {
         return total;
@@ -156,7 +149,7 @@ public class NotaCompra {
         return "NotaCompra{" +
                 "id=" + id +
                 ", numero=" + numero +
-                ", fecha='" + fecha + '\'' +
+
                 ", total=" + total +
                 ", estado='" + estado + '\'' +
                 ", creadoEn=" + creadoEn +

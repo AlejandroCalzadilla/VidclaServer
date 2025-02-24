@@ -1,12 +1,5 @@
 package org.mailgrupo13.vidcla.seeders;
 
-import org.mailgrupo13.vidcla.Inventario.parabrisa.dto.CategoriaDTO;
-import org.mailgrupo13.vidcla.Inventario.parabrisa.services.CategoriaPService;
-import org.mailgrupo13.vidcla.Inventario.parabrisa.services.CategoriaPServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.UUID;
-
 public class CategoriaPSeeder {
 
 

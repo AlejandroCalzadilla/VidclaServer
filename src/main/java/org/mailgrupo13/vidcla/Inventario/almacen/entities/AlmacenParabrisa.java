@@ -65,4 +65,15 @@ public class AlmacenParabrisa {
     public void setAlmacen(Almacen almacen) {
         this.almacen = almacen;
     }
+
+    @Override
+    public String toString() {
+        return "AlmacenParabrisa{" +
+                "id=" + id +
+                ", codigo='" + codigo + '\'' +
+                ", stock=" + stock +
+                ", parabrisa=" + parabrisa +
+                ", almacen=" + almacen +
+                '}';
+    }
 }

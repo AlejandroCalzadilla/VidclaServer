@@ -16,10 +16,16 @@ public class DBSeeder {
     @Autowired
     private VehiculoSeeder vehiculoSeeder;
 
+    @Autowired
+    private ParabrisaSeeder paraBrisaSeeder;
 
     @PostMapping("")
     public void seed() throws CsvValidationException, IOException {
         vehiculoSeeder.seeder();
+        paraBrisaSeeder.seedParabrisas();
     }
+
+
+
 
 }

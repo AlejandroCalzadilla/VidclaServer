@@ -1,4 +1,4 @@
-package org.mailgrupo13.vidcla.Inventario.parabrisa.services;
+package org.mailgrupo13.vidcla.Inventario.parabrisa.services.interfaces;
 
 import org.mailgrupo13.vidcla.Inventario.parabrisa.dto.CategoriaDTO;
 import org.mailgrupo13.vidcla.Inventario.parabrisa.entities.CategoriaP;

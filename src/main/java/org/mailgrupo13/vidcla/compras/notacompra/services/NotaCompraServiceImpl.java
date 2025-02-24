@@ -4,6 +4,8 @@ import org.mailgrupo13.vidcla.Inventario.almacen.services.*;
 import org.mailgrupo13.vidcla.compras.notacompra.dtos.*;
 import org.mailgrupo13.vidcla.compras.notacompra.entities.*;
 import org.mailgrupo13.vidcla.compras.notacompra.repositories.*;
+import org.mailgrupo13.vidcla.compras.notacompra.services.interfaces.DetalleNotaCompraService;
+import org.mailgrupo13.vidcla.compras.notacompra.services.interfaces.NotaCompraService;
 import org.mailgrupo13.vidcla.compras.proveedor.*;
 import org.mailgrupo13.vidcla.compras.proveedor.services.*;
 import org.mailgrupo13.vidcla.validations.*;
@@ -18,7 +20,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
-public class NotaCompraServiceImpl implements NotaCompraService{
+public class NotaCompraServiceImpl implements NotaCompraService {
 
     @Autowired
     private NotaCompraRepository notaCompraRepository;
@@ -34,13 +36,20 @@ public class NotaCompraServiceImpl implements NotaCompraService{
 
     @Override
     public ResponseEntity<List<NotaCompraDTO>> findAll() {
-        return null;
+        List<NotaCompra> notaCompras = notaCompraRepository.findAll();
+        List<NotaCompraDTO>notaCompraDTO=new ArrayList<>();
+        for (NotaCompra notaCompra : notaCompras) {
+            notaCompraDTO.add(convertToDTO(notaCompra));
+        }
+        return ResponseEntity.ok(notaCompraDTO);
     }
+
+
 
 
     @Override
     @Transactional
-    public NotaCompraDTO create(NotaCompraDTO notaCompraDTO) {
+    public NotaCompra create(NotaCompraDTO notaCompraDTO) {
         checkIfNotaCompraExistsByNumero(notaCompraDTO.getNumero());
         Proveedor proveedor = proveedorService.convertToEntity(proveedorService.findById(notaCompraDTO.getProveedorId()));
         Almacen almacen = almacenService.convertToEntity(almacenService.findById(notaCompraDTO.getAlmacenId()));
@@ -50,7 +59,7 @@ public class NotaCompraServiceImpl implements NotaCompraService{
         for (DetalleNotaCompraDTO detalleDTO : notaCompraDTO.getDetalleNotaCompraDTO()) {
             detalleNotaCompraService.create(notaCompra,detalleDTO);
         }
-        return convertToDTO(notaCompra);
+        return notaCompra;
     }
 
 
@@ -62,18 +71,13 @@ public class NotaCompraServiceImpl implements NotaCompraService{
         NotaCompra notaCompra = notaCompraRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("NotaCompra con id " + id + " no encontrado"));
         checkIfNotaCompraExistsByNumeroAndDifferentId(notaCompraDTO.getNumero(), id);
-
         notaCompra.setNumero(notaCompraDTO.getNumero());
-        notaCompra.setFecha(notaCompraDTO.getFecha());
         notaCompra.setTotal(notaCompraDTO.getTotal());
         notaCompra.setEstado(notaCompraDTO.getEstado());
-
         Proveedor proveedor=proveedorService.convertToEntity( proveedorService.findById(notaCompraDTO.getProveedorId()));
         Almacen almacen=almacenService.convertToEntity(almacenService.findById(notaCompraDTO.getAlmacenId()));
-
         notaCompra.setProveedor(proveedor);
         notaCompra.setAlmacen(almacen);
-
         NotaCompra updatedNotaCompra = notaCompraRepository.save(notaCompra);
         return convertToDTO(updatedNotaCompra);
     }
@@ -90,6 +94,8 @@ public class NotaCompraServiceImpl implements NotaCompraService{
                 .orElseThrow(() -> new ResourceNotFoundException("NotaCompra con id " + id + " no encontrado"));
     }
 
+
+
     @Override
     public void delete(UUID id) {
         NotaCompra notaCompra = notaCompraRepository.findById(id)
@@ -98,8 +104,6 @@ public class NotaCompraServiceImpl implements NotaCompraService{
           ResponseEntity.status(HttpStatus.NOT_FOUND).body("NotaCompra con id " + id + " no encontrado");
         }
         notaCompraRepository.delete(notaCompra);
-
-
     }
 
 
@@ -108,14 +112,11 @@ public class NotaCompraServiceImpl implements NotaCompraService{
         return new NotaCompraDTO(
                 notaCompra.getId(),
                 notaCompra.getNumero(),
-                notaCompra.getFecha(),
                 notaCompra.getTotal(),
                 notaCompra.getEstado(),
                 notaCompra.getProveedor().getId(),
                 notaCompra.getAlmacen().getId(),
-                notaCompra.getDetalleNotaCompras().stream()
-                        .map(detalleNotaCompraService::convertToDTO)
-                        .collect(Collectors.toList())
+                null
         );
     }
 
@@ -128,7 +129,7 @@ public class NotaCompraServiceImpl implements NotaCompraService{
         NotaCompra notaCompra = new NotaCompra();
         notaCompra.setId(notaCompraDTO.getId());
         notaCompra.setNumero(notaCompraDTO.getNumero());
-        notaCompra.setFecha(notaCompraDTO.getFecha());
+
         notaCompra.setTotal(notaCompraDTO.getTotal());
         notaCompra.setEstado(notaCompraDTO.getEstado());
         notaCompra.setProveedor(proveedor);
@@ -148,6 +149,9 @@ public class NotaCompraServiceImpl implements NotaCompraService{
            ResponseEntity.status(HttpStatus.CONFLICT).body("NotaCompra con numero " + numero + " ya existe");
         }
     }
+
+
+
 
     private void checkIfNotaCompraExistsByNumeroAndDifferentId(Integer numero, UUID id) {
         Optional<NotaCompra> existingNotaCompra = notaCompraRepository.findByNumero(numero);

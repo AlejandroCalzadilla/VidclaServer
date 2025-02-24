@@ -41,18 +41,20 @@ public class Vehiculo {
 
 
 
-    @Version
-    private Integer version;
+
 
     @PrePersist
     protected void onCreate() {
         this.creadoEn = java.time.LocalDateTime.now();
         this.actualizadoEn = java.time.LocalDateTime.now();
+
     }
 
     @PreUpdate
-    protected void onUpdate() {
+    protected void onUpdate()
+    {
         this.actualizadoEn = java.time.LocalDateTime.now();
+
     }
 
 
@@ -146,11 +148,5 @@ public class Vehiculo {
         this.actualizadoEn = actualizadoEn;
     }
 
-    public Integer getVersion() {
-        return version;
-    }
 
-    public void setVersion(Integer version) {
-        this.version = version;
-    }
 }

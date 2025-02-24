@@ -1,12 +1,11 @@
 package org.mailgrupo13.vidcla.Inventario.almacen.services;
 
-import org.mailgrupo13.vidcla.Inventario.almacen.dto.AlmacenDTO;
 import org.mailgrupo13.vidcla.Inventario.almacen.dto.AlmacenParabrisaDto;
 import org.mailgrupo13.vidcla.Inventario.almacen.entities.Almacen;
 import org.mailgrupo13.vidcla.Inventario.almacen.entities.AlmacenParabrisa;
 import org.mailgrupo13.vidcla.Inventario.almacen.repositories.AlmacenParabrisaRepository;
 import org.mailgrupo13.vidcla.Inventario.parabrisa.entities.Parabrisa;
-import org.mailgrupo13.vidcla.Inventario.parabrisa.services.ParabrisaService;
+import org.mailgrupo13.vidcla.Inventario.parabrisa.services.interfaces.ParabrisaService;
 import org.mailgrupo13.vidcla.validations.ResourceAlreadyExistsException;
 import org.mailgrupo13.vidcla.validations.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,23 +82,7 @@ public class AlmacenParabrisaServiceImpl implements AlmacenParabrisaService{
         return null;
     }
 
-    @Override
-    public AlmacenParabrisaDto convertToDTO(AlmacenParabrisa almacenP){
-        return new AlmacenParabrisaDto(
-                almacenP.getId(),
-                almacenP.getStock(),
-                almacenP.getCodigo(),
-                almacenP.getParabrisa().getId(),
-                almacenP.getAlmacen().getId());
-    }
 
-    public  AlmacenParabrisa convertToEntity(AlmacenParabrisaDto almacenPDTO){
-       AlmacenParabrisa almacenP = new AlmacenParabrisa();
-         almacenP.setId(almacenPDTO.getId());
-            almacenP.setStock(almacenPDTO.getStock());
-            almacenP.setCodigo(almacenPDTO.getCodigo());
-            return almacenP;
-    }
 
 
     @Override
@@ -123,5 +106,28 @@ public class AlmacenParabrisaServiceImpl implements AlmacenParabrisaService{
             categoriasDTO.add(convertToDTO(categoria));
         }
         return ResponseEntity.ok(categoriasDTO);
+    }
+
+
+
+    @Override
+    public AlmacenParabrisaDto convertToDTO(AlmacenParabrisa almacenP){
+        return new AlmacenParabrisaDto(
+                almacenP.getId(),
+                almacenP.getStock(),
+                almacenP.getCodigo(),
+                almacenP.getParabrisa().getId(),
+                almacenP.getAlmacen().getId());
+    }
+
+    public  AlmacenParabrisa convertToEntity(AlmacenParabrisaDto almacenPDTO){
+        AlmacenParabrisa almacenP = new AlmacenParabrisa();
+        almacenP.setId(almacenPDTO.getId());
+        almacenP.setAlmacen(almacenService.convertToEntity(almacenService.findById(almacenPDTO.getAlmacenId())));
+        almacenP.setParabrisa(parabrisaService.convertToEntity(parabrisaService.findById(almacenPDTO.getParabrisaId())));
+        almacenP.setStock(almacenPDTO.getStock());
+        almacenP.setCodigo(almacenPDTO.getCodigo());
+
+        return almacenP;
     }
 }

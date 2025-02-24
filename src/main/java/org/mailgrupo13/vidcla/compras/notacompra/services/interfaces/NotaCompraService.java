@@ -1,4 +1,4 @@
-package org.mailgrupo13.vidcla.compras.notacompra.services;
+package org.mailgrupo13.vidcla.compras.notacompra.services.interfaces;
 
 import org.mailgrupo13.vidcla.compras.notacompra.dtos.NotaCompraDTO;
 import org.mailgrupo13.vidcla.compras.notacompra.entities.NotaCompra;
@@ -18,7 +18,7 @@ public interface NotaCompraService {
      * -return 400 si no se puede crear el registro , validaciones
      */
 
-    public NotaCompraDTO create(NotaCompraDTO notaCompraDTO);
+    public NotaCompra create(NotaCompraDTO notaCompraDTO);
 
 
 

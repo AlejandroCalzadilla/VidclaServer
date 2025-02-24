@@ -10,7 +10,7 @@ public class NotaCompraDTO {
 
     private Integer numero;
 
-    private String fecha;
+
 
     private BigDecimal total;
 
@@ -26,10 +26,10 @@ public class NotaCompraDTO {
 
     private List<DetalleNotaCompraDTO> detalleNotaCompraDTO;
 
-    public NotaCompraDTO(UUID id, Integer numero, String fecha, BigDecimal total, String estado, UUID proveedorId, UUID almacenId, List<DetalleNotaCompraDTO> detalleNotaCompraDTO) {
+    public NotaCompraDTO(UUID id, Integer numero, BigDecimal total, String estado, UUID proveedorId, UUID almacenId, List<DetalleNotaCompraDTO> detalleNotaCompraDTO) {
         this.id = id;
         this.numero = numero;
-        this.fecha = fecha;
+
         this.total = total;
         this.estado = estado;
         this.proveedorId = proveedorId;
@@ -54,13 +54,7 @@ public class NotaCompraDTO {
         this.numero = numero;
     }
 
-    public String getFecha() {
-        return fecha;
-    }
 
-    public void setFecha(String fecha) {
-        this.fecha = fecha;
-    }
 
     public BigDecimal getTotal() {
         return total;
@@ -129,7 +123,6 @@ public class NotaCompraDTO {
         return "NotaCompraDTO{" +
                 "id=" + id +
                 ", numero=" + numero +
-                ", fecha='" + fecha + '\'' +
                 ", total=" + total +
                 ", estado='" + estado + '\'' +
                 ", proveedorId=" + proveedorId +

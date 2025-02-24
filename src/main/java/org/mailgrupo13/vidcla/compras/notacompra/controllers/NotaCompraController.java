@@ -1,10 +1,10 @@
 package org.mailgrupo13.vidcla.compras.notacompra.controllers;
 
 
-import org.mailgrupo13.vidcla.compras.notacompra.dtos.DetalleNotaCompraDTO;
 import org.mailgrupo13.vidcla.compras.notacompra.dtos.NotaCompraDTO;
-import org.mailgrupo13.vidcla.compras.notacompra.services.DetalleNotaCompraService;
-import org.mailgrupo13.vidcla.compras.notacompra.services.NotaCompraService;
+import org.mailgrupo13.vidcla.compras.notacompra.entities.NotaCompra;
+import org.mailgrupo13.vidcla.compras.notacompra.services.interfaces.DetalleNotaCompraService;
+import org.mailgrupo13.vidcla.compras.notacompra.services.interfaces.NotaCompraService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,8 +32,7 @@ public class NotaCompraController {
 
 
     @PostMapping
-    public NotaCompraDTO create(@RequestBody  NotaCompraDTO notaCompraDTO) {
-
+    public NotaCompra create(@RequestBody  NotaCompraDTO notaCompraDTO) {
         System.out.println("NotaCompraDTO: " + notaCompraDTO.toString());
         return notaCompraService.create(notaCompraDTO);
     }

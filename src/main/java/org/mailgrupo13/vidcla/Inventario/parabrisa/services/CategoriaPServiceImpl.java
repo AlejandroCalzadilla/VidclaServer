@@ -3,13 +3,13 @@ package org.mailgrupo13.vidcla.Inventario.parabrisa.services;
 import org.mailgrupo13.vidcla.Inventario.parabrisa.dto.CategoriaDTO;
 import org.mailgrupo13.vidcla.Inventario.parabrisa.entities.CategoriaP;
 import org.mailgrupo13.vidcla.Inventario.parabrisa.repositories.CategoriaPRepository;
+import org.mailgrupo13.vidcla.Inventario.parabrisa.services.interfaces.CategoriaPService;
 import org.mailgrupo13.vidcla.validations.ResourceAlreadyExistsException;
 import org.mailgrupo13.vidcla.validations.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -17,7 +17,7 @@ import java.util.UUID;
 
 
 @Service
-public class CategoriaPServiceImpl implements  CategoriaPService{
+public class CategoriaPServiceImpl implements CategoriaPService {
 
 
     @Autowired
@@ -79,7 +79,7 @@ public class CategoriaPServiceImpl implements  CategoriaPService{
 
 
     private CategoriaDTO convertToDTO(CategoriaP categoriaP){
-        return new CategoriaDTO(categoriaP.getId(), categoriaP.getNombre(),categoriaP.getCodigo());
+        return new CategoriaDTO(categoriaP.getId(), categoriaP.getNombre(),categoriaP.getCodigo(),categoriaP.getCreadoEn(),categoriaP.getActualizadoEn());
     }
 
 

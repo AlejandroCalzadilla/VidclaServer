@@ -1,10 +1,9 @@
 package org.mailgrupo13.vidcla.Inventario.parabrisa.services;
 
-import org.mailgrupo13.vidcla.Inventario.parabrisa.dto.CategoriaDTO;
 import org.mailgrupo13.vidcla.Inventario.parabrisa.dto.PosicionPDTO;
-import org.mailgrupo13.vidcla.Inventario.parabrisa.entities.CategoriaP;
 import org.mailgrupo13.vidcla.Inventario.parabrisa.entities.PosicionP;
 import org.mailgrupo13.vidcla.Inventario.parabrisa.repositories.PosicionPRepository;
+import org.mailgrupo13.vidcla.Inventario.parabrisa.services.interfaces.PosicionPService;
 import org.mailgrupo13.vidcla.validations.ResourceAlreadyExistsException;
 import org.mailgrupo13.vidcla.validations.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +16,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-public class PosicionPServiceImpl implements  PosicionPService {
+public class PosicionPServiceImpl implements PosicionPService {
 
     @Autowired
     private PosicionPRepository posicionPRepository;

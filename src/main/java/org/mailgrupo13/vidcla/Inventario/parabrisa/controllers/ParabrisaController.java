@@ -1,20 +1,15 @@
 package org.mailgrupo13.vidcla.Inventario.parabrisa.controllers;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.ExampleObject;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import org.mailgrupo13.vidcla.Inventario.parabrisa.documentacion.ParabrisaApiDoc;
 import org.mailgrupo13.vidcla.imagenes.ImagenService;
 import org.mailgrupo13.vidcla.Inventario.parabrisa.dto.ParabrisaDTO;
-import org.mailgrupo13.vidcla.Inventario.parabrisa.services.ParabrisaService;
+import org.mailgrupo13.vidcla.Inventario.parabrisa.services.interfaces.ParabrisaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+
 import java.util.List;
 import java.util.UUID;
 

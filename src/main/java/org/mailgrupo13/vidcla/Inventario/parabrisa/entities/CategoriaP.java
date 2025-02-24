@@ -2,12 +2,16 @@ package org.mailgrupo13.vidcla.Inventario.parabrisa.entities;
 
 import jakarta.persistence.*;
 import org.springframework.beans.factory.annotation.Autowired;
-
+import lombok.*;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
 @Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class CategoriaP {
 
     @Id
@@ -17,7 +21,6 @@ public class CategoriaP {
     private String codigo;
     private LocalDateTime creadoEn;
     private LocalDateTime actualizadoEn;
-
     @OneToMany(mappedBy = "categoria")
     private List<Parabrisa> parabrisas;
 
@@ -32,44 +35,6 @@ public class CategoriaP {
     @PreUpdate
     protected void onUpdate() {
         this.actualizadoEn = java.time.LocalDateTime.now();
-    }
-
-
-
-
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public String getCodigo() {
-        return codigo;
-    }
-
-    public void setCodigo(String codigo) {
-        this.codigo = codigo;
-    }
-
-    public LocalDateTime getCreadoEn() {
-        return creadoEn;
-    }
-
-
-
-    public LocalDateTime getActualizadoEn() {
-        return actualizadoEn;
     }
 
 

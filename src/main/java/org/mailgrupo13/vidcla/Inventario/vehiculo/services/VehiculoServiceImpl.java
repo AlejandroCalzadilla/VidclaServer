@@ -49,15 +49,12 @@ public class VehiculoServiceImpl implements VehiculoService {
 
     @Override
     public VehiculoDTO create(VehiculoDTO vehiculoDTO, List<MultipartFile> imagenes) {
-        MarcaV marca = marcaVService.convertToEntity(marcaVService.findById(vehiculoDTO.getMarcaId()));
+        //MarcaV marca = marcaVService.convertToEntity(marcaVService.findById(vehiculoDTO.getMarcaId()));
         Vehiculo vehiculo = convertToEntity(vehiculoDTO);
-        vehiculo.setMarca(marca);
-        Optional<Vehiculo> lastVehiculo = vehiculoRepository.findTopByMarcaVIdOrderByCodigoDesc(marca.getId());
-        int newCodigo = lastVehiculo.map(v -> Integer.parseInt(v.getCodigo()) + 1).orElse(marca.getCodigo());
+        Optional<Vehiculo> lastVehiculo = vehiculoRepository.findTopByMarcaVIdOrderByCodigoDesc(vehiculo.getMarca().getId());
+        int newCodigo = lastVehiculo.map(v -> Integer.parseInt(v.getCodigo()) + 1).orElse(vehiculo.getMarca().getCodigo());
         vehiculo.setCodigo(String.valueOf(newCodigo));
         vehiculo = vehiculoRepository.save(vehiculo);
-
-
         List<ImagenDTO> imagenesVehiculo =new ArrayList<>();
         // Save images if present
         if (imagenes != null) {
@@ -74,12 +71,12 @@ public class VehiculoServiceImpl implements VehiculoService {
 
          VehiculoDTO vehiculoDTO1 = convertToDTO(vehiculo);
          vehiculoDTO1.setImagenes(imagenesVehiculo);
-
          return vehiculoDTO1;
     }
 
     @Override
     public ResponseEntity<List<VehiculoDTO>> FindAll() {
+
         return null;
     }
 
@@ -159,6 +156,8 @@ public class VehiculoServiceImpl implements VehiculoService {
 
     public Vehiculo convertToEntity(VehiculoDTO vehiculoDTO) {
         Vehiculo vehiculo = new Vehiculo();
+        MarcaV marca = marcaVService.convertToEntity(marcaVService.findById(vehiculoDTO.getMarcaId()));
+        vehiculo.setMarca(marca);
         vehiculo.setId(vehiculoDTO.getId());
         vehiculo.setDescripcion(vehiculoDTO.getDescripcion());
         vehiculo.setYear_inicio(vehiculoDTO.getYear_inicio());
