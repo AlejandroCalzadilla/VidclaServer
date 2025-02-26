@@ -49,7 +49,7 @@ public class VehiculoServiceImpl implements VehiculoService {
 
     @Override
     public VehiculoDTO create(VehiculoDTO vehiculoDTO, List<MultipartFile> imagenes) {
-        //MarcaV marca = marcaVService.convertToEntity(marcaVService.findById(vehiculoDTO.getMarcaId()));
+        //MarcaV marca = marcaVService.mapToEntity(marcaVService.findById(vehiculoDTO.getMarcaId()));
         Vehiculo vehiculo = convertToEntity(vehiculoDTO);
         Optional<Vehiculo> lastVehiculo = vehiculoRepository.findTopByMarcaVIdOrderByCodigoDesc(vehiculo.getMarca().getId());
         int newCodigo = lastVehiculo.map(v -> Integer.parseInt(v.getCodigo()) + 1).orElse(vehiculo.getMarca().getCodigo());

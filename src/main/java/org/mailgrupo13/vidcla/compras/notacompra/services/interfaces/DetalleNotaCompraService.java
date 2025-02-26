@@ -13,6 +13,7 @@ public interface DetalleNotaCompraService {
   DetalleNotaCompraDTO findById(UUID id);
   ResponseEntity<List<DetalleNotaCompraDTO>> findAll();
   void create(NotaCompra notaCompra, DetalleNotaCompraDTO detalleNotaCompraDTO);
+  void update(UUID id, DetalleNotaCompraDTO detalleNotaCompraDTO);
   ResponseEntity<?> delete(UUID id);
   DetalleNotaCompraDTO convertToDTO(DetalleNotaCompra detalleNotaCompra);
   DetalleNotaCompra convertToEntity(DetalleNotaCompraDTO detalleNotaCompraDTO);

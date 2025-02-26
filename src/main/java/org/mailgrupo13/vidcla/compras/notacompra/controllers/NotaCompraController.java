@@ -37,6 +37,11 @@ public class NotaCompraController {
         return notaCompraService.create(notaCompraDTO);
     }
 
+    @PutMapping("/{id}")
+    public void update(@PathVariable UUID id , @RequestBody NotaCompraDTO notaCompraDTO){
+         notaCompraService.update(id,notaCompraDTO);
+    }
+
 
     /*@PostMapping("/detalle/{id}")
     public DetalleNotaCompraDTO createdetalle(@PathVariable UUID id, @RequestBody DetalleNotaCompraDTO detalleNotaCompraDTO ) {

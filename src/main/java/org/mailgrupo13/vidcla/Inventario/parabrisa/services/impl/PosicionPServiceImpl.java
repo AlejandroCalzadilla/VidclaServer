@@ -1,9 +1,10 @@
-package org.mailgrupo13.vidcla.Inventario.parabrisa.services;
+package org.mailgrupo13.vidcla.Inventario.parabrisa.services.impl;
 
 import org.mailgrupo13.vidcla.Inventario.parabrisa.dto.PosicionPDTO;
 import org.mailgrupo13.vidcla.Inventario.parabrisa.entities.PosicionP;
+import org.mailgrupo13.vidcla.Inventario.parabrisa.mappers.PosicionPMapper;
 import org.mailgrupo13.vidcla.Inventario.parabrisa.repositories.PosicionPRepository;
-import org.mailgrupo13.vidcla.Inventario.parabrisa.services.interfaces.PosicionPService;
+import org.mailgrupo13.vidcla.Inventario.parabrisa.services.PosicionPService;
 import org.mailgrupo13.vidcla.validations.ResourceAlreadyExistsException;
 import org.mailgrupo13.vidcla.validations.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +19,35 @@ import java.util.UUID;
 @Service
 public class PosicionPServiceImpl implements PosicionPService {
 
+    private final PosicionPRepository posicionPRepository;
+
+    private  final PosicionPMapper posicionPMapper;
+
+
+
     @Autowired
-    private PosicionPRepository posicionPRepository;
+    public PosicionPServiceImpl(PosicionPRepository posicionPRepository, PosicionPMapper posicionPMapper) {
+        this.posicionPRepository = posicionPRepository;
+        this.posicionPMapper = posicionPMapper;
+    }
+
+    @Override
+    public List<PosicionPDTO> findAll(){
+        List<PosicionP> categorias=posicionPRepository.findAll();
+        List<PosicionPDTO> posicionPDTO=new ArrayList<>();
+        for(PosicionP posicionP:categorias){
+            posicionPDTO.add(mapToDTO(posicionP));
+        }
+        return posicionPDTO;
+    }
+
+
+    @Override
+    public PosicionPDTO findById(UUID id) {
+        PosicionP categoria = posicionPRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Posicion con id " + id + " no encontrada"));
+        return mapToDTO(categoria);
+    }
 
 
     @Override
@@ -28,23 +56,15 @@ public class PosicionPServiceImpl implements PosicionPService {
         if (existingCategoria.isPresent())
             throw new ResourceAlreadyExistsException("Posicion con nombre " + posicionPDTO.getNombre() + " ya existe");
 
-        PosicionP posicionP = convertToEntity(posicionPDTO);
+        PosicionP posicionP = mapToEntity(posicionPDTO);
         posicionP.setCreadoEn(LocalDateTime.now());
         posicionP.setActualizadoEn(LocalDateTime.now());
         posicionP = posicionPRepository.save(posicionP);
-        return convertToDTO(posicionP);
+        return mapToDTO(posicionP);
     }
 
 
-    @Override
-    public List<PosicionPDTO> findAll(){
-        List<PosicionP> categorias=posicionPRepository.findAll();
-        List<PosicionPDTO> posicionPDTO=new ArrayList<>();
-        for(PosicionP posicionP:categorias){
-            posicionPDTO.add(convertToDTO(posicionP));
-        }
-        return posicionPDTO;
-    }
+
 
 
     @Override
@@ -57,14 +77,14 @@ public class PosicionPServiceImpl implements PosicionPService {
     }
 
 
-    @Override
-    public PosicionPDTO findById(UUID id) {
-        PosicionP categoria = posicionPRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Posicion con id " + id + " no encontrada"));
-        return convertToDTO(categoria);
-    }
 
-    private PosicionPDTO convertToDTO(PosicionP posicionP) {
+
+
+
+
+
+    @Override
+    public PosicionPDTO mapToDTO(PosicionP posicionP) {
         return new PosicionPDTO(
                 posicionP.getId(),
                 posicionP.getNombre(),
@@ -79,7 +99,7 @@ public class PosicionPServiceImpl implements PosicionPService {
 
 
     @Override
-    public  PosicionP convertToEntity(PosicionPDTO posicionPDTO){
+    public  PosicionP mapToEntity(PosicionPDTO posicionPDTO){
         PosicionP categoriaP=new PosicionP();
         categoriaP.setId(posicionPDTO.getId());
         categoriaP.setNombre(posicionPDTO.getNombre());

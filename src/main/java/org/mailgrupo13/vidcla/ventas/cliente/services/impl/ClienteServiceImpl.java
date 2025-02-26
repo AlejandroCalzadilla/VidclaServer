@@ -6,10 +6,14 @@ import org.mailgrupo13.vidcla.ventas.cliente.mappers.ClienteMapper;
 import org.mailgrupo13.vidcla.ventas.cliente.repositories.ClienteRepository;
 import org.mailgrupo13.vidcla.ventas.cliente.services.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
 
+
+
+@Service
 public class ClienteServiceImpl implements ClienteService {
 
     private final ClienteRepository clienteRepository;
@@ -55,7 +59,18 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Override
     public ClienteDTO update(UUID id, ClienteDTO clienteDTO) {
-        return null;
+        if(!clienteRepository.existsById(id)){
+            throw new ResourceNotFoundException("Cliente con id "+id+" no encontrado");
+        }
+        Cliente cliente=new Cliente();
+        cliente.setNombre(clienteDTO.getNombre());
+        cliente.setApellido(clienteDTO.getApellido());
+        cliente.setDireccion(clienteDTO.getDireccion());
+        cliente.setCi(clienteDTO.getCi());
+        cliente.setNit(clienteDTO.getNit());
+        cliente.setTelefono(clienteDTO.getTelefono());
+        cliente=clienteRepository.save(cliente);
+        return mapToDTO(cliente);
     }
 
     @Override

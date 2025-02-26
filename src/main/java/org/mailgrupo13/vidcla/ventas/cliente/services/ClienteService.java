@@ -3,8 +3,11 @@ package org.mailgrupo13.vidcla.ventas.cliente.services;
 import org.mailgrupo13.vidcla.compras.proveedor.Proveedor;
 import org.mailgrupo13.vidcla.ventas.cliente.dtos.ClienteDTO;
 import org.mailgrupo13.vidcla.ventas.cliente.entitites.Cliente;
+import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.UUID;
+
 
 public interface ClienteService {
 

@@ -8,7 +8,7 @@ public class DetalleNotaCompraDTO {
 
 
     private UUID id;
-    private Integer canitdad;
+    private Integer cantidad;
     private BigDecimal precio;
 
     private LocalDateTime creadoEn;
@@ -19,7 +19,7 @@ public class DetalleNotaCompraDTO {
 
     public DetalleNotaCompraDTO(UUID id, Integer canitdad, BigDecimal precio, UUID parabrisaId, UUID notaCompraId) {
         this.id = id;
-        this.canitdad = canitdad;
+        this.cantidad = canitdad;
         this.precio = precio;
         this.parabrisaId = parabrisaId;
         this.notaCompraId = notaCompraId;
@@ -33,12 +33,12 @@ public class DetalleNotaCompraDTO {
         this.id = id;
     }
 
-    public Integer getCanitdad() {
-        return canitdad;
+    public Integer getCantidad() {
+        return cantidad;
     }
 
-    public void setCanitdad(Integer canitdad) {
-        this.canitdad = canitdad;
+    public void setCantidad(Integer canitdad) {
+        this.cantidad= canitdad;
     }
 
     public BigDecimal getPrecio() {
@@ -85,7 +85,7 @@ public class DetalleNotaCompraDTO {
     public String toString() {
         return "DetalleNotaCompraDTO{" +
                 "id=" + id +
-                ", canitdad=" + canitdad +
+                ", canitdad=" + cantidad+
                 ", precio=" + precio +
                 ", creadoEn=" + creadoEn +
                 ", actualizadoEn=" + actualizadoEn +

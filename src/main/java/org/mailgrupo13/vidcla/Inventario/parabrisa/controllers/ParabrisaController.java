@@ -4,7 +4,7 @@ import jakarta.validation.Valid;
 import org.mailgrupo13.vidcla.Inventario.parabrisa.documentacion.ParabrisaApiDoc;
 import org.mailgrupo13.vidcla.imagenes.ImagenService;
 import org.mailgrupo13.vidcla.Inventario.parabrisa.dto.ParabrisaDTO;
-import org.mailgrupo13.vidcla.Inventario.parabrisa.services.interfaces.ParabrisaService;
+import org.mailgrupo13.vidcla.Inventario.parabrisa.services.ParabrisaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;

@@ -1,4 +1,4 @@
-package org.mailgrupo13.vidcla.Inventario.parabrisa.services.interfaces;
+package org.mailgrupo13.vidcla.Inventario.parabrisa.services;
 
 import org.mailgrupo13.vidcla.Inventario.parabrisa.dto.CategoriaDTO;
 import org.mailgrupo13.vidcla.Inventario.parabrisa.entities.CategoriaP;
@@ -12,6 +12,7 @@ public interface CategoriaPService {
     public CategoriaDTO create(CategoriaDTO categoriaPDTO);
     public ResponseEntity<?> delete(UUID id);
     public CategoriaDTO findById(UUID id);
-    public CategoriaP convertToEntity(CategoriaDTO categoriaPDTO);
+    public CategoriaP mapToEntity(CategoriaDTO categoriaPDTO);
+    public CategoriaDTO mapToDTO(CategoriaP categoriaP);
     public List<CategoriaDTO> findAll();
 }

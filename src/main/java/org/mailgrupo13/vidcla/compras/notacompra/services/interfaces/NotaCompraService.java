@@ -47,7 +47,7 @@ public interface NotaCompraService {
      * - 404 Not Found si no se encuentra el almacén
      * - 409 Conflict si ya existe un almacén con el mismo nombre
      */
-    public NotaCompraDTO update(UUID id, NotaCompraDTO notaCompraDTO);
+    public void update(UUID id, NotaCompraDTO notaCompraDTO);
 
 
     /**

@@ -1,7 +1,6 @@
 package org.mailgrupo13.vidcla.Inventario.parabrisa.entities;
 
 import jakarta.persistence.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import lombok.*;
 import java.time.LocalDateTime;
 import java.util.List;

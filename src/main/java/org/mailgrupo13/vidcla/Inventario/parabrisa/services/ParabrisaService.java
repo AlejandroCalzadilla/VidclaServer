@@ -1,4 +1,4 @@
-package org.mailgrupo13.vidcla.Inventario.parabrisa.services.interfaces;
+package org.mailgrupo13.vidcla.Inventario.parabrisa.services;
 
 import org.mailgrupo13.vidcla.Inventario.parabrisa.dto.ParabrisaDTO;
 import org.mailgrupo13.vidcla.Inventario.parabrisa.entities.Parabrisa;
@@ -14,16 +14,8 @@ public interface ParabrisaService {
     ParabrisaDTO create(ParabrisaDTO windshieldDTO);
     ParabrisaDTO update(UUID id, ParabrisaDTO windshieldDTO);
     ResponseEntity<?> delete(UUID id);
-    Parabrisa convertToEntity(ParabrisaDTO parabrisa);
-    Parabrisa save(Parabrisa parabrisa);
-
-
-
-
-
-
-
-
+    Parabrisa mapToEntity(ParabrisaDTO parabrisa);
+    ParabrisaDTO mapToDTO(Parabrisa parabrisa);
 
 
 

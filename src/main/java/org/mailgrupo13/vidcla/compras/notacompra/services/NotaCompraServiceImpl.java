@@ -13,10 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -52,7 +50,7 @@ public class NotaCompraServiceImpl implements NotaCompraService {
     public NotaCompra create(NotaCompraDTO notaCompraDTO) {
         checkIfNotaCompraExistsByNumero(notaCompraDTO.getNumero());
         Proveedor proveedor = proveedorService.convertToEntity(proveedorService.findById(notaCompraDTO.getProveedorId()));
-        Almacen almacen = almacenService.convertToEntity(almacenService.findById(notaCompraDTO.getAlmacenId()));
+        Almacen almacen = almacenService.mapToEntity(almacenService.findById(notaCompraDTO.getAlmacenId()));
         NotaCompra notaCompra = convertToEntity(notaCompraDTO);
         notaCompra = notaCompraRepository.save(notaCompra);
         List<DetalleNotaCompra> detalles = new ArrayList<>();
@@ -63,24 +61,71 @@ public class NotaCompraServiceImpl implements NotaCompraService {
     }
 
 
-
-
-
     @Override
-    public NotaCompraDTO update(UUID id, NotaCompraDTO notaCompraDTO) {
+    @Transactional
+    public void update(UUID id, NotaCompraDTO notaCompraDTO) {
         NotaCompra notaCompra = notaCompraRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("NotaCompra con id " + id + " no encontrado"));
-        checkIfNotaCompraExistsByNumeroAndDifferentId(notaCompraDTO.getNumero(), id);
+
+        // Actualizar campos de NotaCompra
         notaCompra.setNumero(notaCompraDTO.getNumero());
         notaCompra.setTotal(notaCompraDTO.getTotal());
         notaCompra.setEstado(notaCompraDTO.getEstado());
-        Proveedor proveedor=proveedorService.convertToEntity( proveedorService.findById(notaCompraDTO.getProveedorId()));
-        Almacen almacen=almacenService.convertToEntity(almacenService.findById(notaCompraDTO.getAlmacenId()));
+        Proveedor proveedor = proveedorService.convertToEntity(proveedorService.findById(notaCompraDTO.getProveedorId()));
+        Almacen almacen = almacenService.mapToEntity(almacenService.findById(notaCompraDTO.getAlmacenId()));
         notaCompra.setProveedor(proveedor);
         notaCompra.setAlmacen(almacen);
-        NotaCompra updatedNotaCompra = notaCompraRepository.save(notaCompra);
-        return convertToDTO(updatedNotaCompra);
+
+        // Actualizar detalles
+        List<DetalleNotaCompra> detallesExistentes = notaCompra.getDetalleNotaCompras();
+        List<DetalleNotaCompraDTO> nuevosDetallesDTO = notaCompraDTO.getDetalleNotaCompraDTO();
+
+        // Eliminar detalles que ya no están presentes
+        Iterator<DetalleNotaCompra> iterator = detallesExistentes.iterator();
+        while (iterator.hasNext()) {
+            DetalleNotaCompra detalleExistente = iterator.next();
+            boolean existe = nuevosDetallesDTO.stream()
+                    .filter(nuevoDetalle -> nuevoDetalle.getId() != null)
+                    .anyMatch(nuevoDetalle -> nuevoDetalle.getId().equals(detalleExistente.getId()));
+            if (!existe) {
+                System.out.println("llega por aca borrar el detlla que borre");
+                detalleNotaCompraService.delete(detalleExistente.getId());
+                iterator.remove();
+            }
+        }
+
+        // Agregar o actualizar detalles
+        for (DetalleNotaCompraDTO nuevoDetalleDTO : nuevosDetallesDTO) {
+            if (nuevoDetalleDTO.getId() == null) {
+                System.out.println("llega aca al create");
+                try {
+                    detalleNotaCompraService.create(notaCompra, nuevoDetalleDTO);
+                } catch (Exception e) {
+                    System.out.println("llega por aca al create error"+ e);
+                }
+                    // detalleNotaCompraService.create(notaCompra, nuevoDetalleDTO);
+
+            } else {
+                System.out.println("seguro entra por aca al update");
+                detalleNotaCompraService.update(nuevoDetalleDTO.getId(), nuevoDetalleDTO);
+            }
+        }
+
+        System.out.println("llega aca a lo ultimo");
+        notaCompraRepository.save(notaCompra);
+        //System.out.println();
+        //return updatedNotaCompra;
     }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -125,7 +170,7 @@ public class NotaCompraServiceImpl implements NotaCompraService {
     public NotaCompra convertToEntity(NotaCompraDTO notaCompraDTO) {
 
         Proveedor proveedor = proveedorService.convertToEntity(proveedorService.findById(notaCompraDTO.getProveedorId()));
-        Almacen almacen= almacenService.convertToEntity(almacenService.findById(notaCompraDTO.getAlmacenId()));
+        Almacen almacen= almacenService.mapToEntity(almacenService.findById(notaCompraDTO.getAlmacenId()));
         NotaCompra notaCompra = new NotaCompra();
         notaCompra.setId(notaCompraDTO.getId());
         notaCompra.setNumero(notaCompraDTO.getNumero());

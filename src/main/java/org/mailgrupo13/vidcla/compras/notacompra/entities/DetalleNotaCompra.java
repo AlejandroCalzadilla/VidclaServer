@@ -14,7 +14,7 @@ public class DetalleNotaCompra {
  @Id
  @GeneratedValue(strategy = GenerationType.UUID)
   private UUID id;
- private Integer canitdad;
+ private Integer cantidad;
  private BigDecimal precio;
 
  private LocalDateTime creadoEn;
@@ -53,11 +53,11 @@ public class DetalleNotaCompra {
     }
 
     public Integer getCanitdad() {
-        return canitdad;
+        return cantidad;
     }
 
     public void setCanitdad(Integer canitdad) {
-        this.canitdad = canitdad;
+        this.cantidad = canitdad;
     }
 
     public BigDecimal getPrecio() {
@@ -99,7 +99,7 @@ public class DetalleNotaCompra {
     public String toString() {
         return "DetalleNotaCompra{" +
                 "id=" + id +
-                ", canitdad=" + canitdad +
+                ", canitdad=" + cantidad +
                 ", precio=" + precio +
                 ", creadoEn=" + creadoEn +
                 ", actualizadoEn=" + actualizadoEn +

@@ -1,8 +1,18 @@
 package org.mailgrupo13.vidcla.Inventario.parabrisa.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class PosicionPDTO {
 
     private UUID id;
@@ -11,61 +21,5 @@ public class PosicionPDTO {
     private LocalDateTime creadoEn;
     private LocalDateTime actualizadoEn;
 
-
-    public PosicionPDTO(UUID id, String nombre,String codigo,LocalDateTime creadoen, LocalDateTime actulizadoen ) {
-        this.id=id;
-        this.nombre=nombre;
-        this.codigo=codigo;
-        this.creadoEn=creadoen;
-        this.actualizadoEn=actulizadoen;
-    }
-
-    public String getCodigo() {
-        return codigo;
-    }
-
-    public void setCodigo(String codigo) {
-        this.codigo = codigo;
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public LocalDateTime getCreadoEn() {
-        return creadoEn;
-    }
-
-    public void setCreadoEn(LocalDateTime creadoEn) {
-        this.creadoEn = creadoEn;
-    }
-
-    public LocalDateTime getActualizadoEn() {
-        return actualizadoEn;
-    }
-
-    public void setActualizadoEn(LocalDateTime actualizadoEn) {
-        this.actualizadoEn = actualizadoEn;
-    }
-
-    @Override
-    public String toString() {
-        return "CategoriaPDTO{" +
-                "id=" + id +
-                ", nombre='" + nombre + '\'' +
-                '}';
-    }
 
 }

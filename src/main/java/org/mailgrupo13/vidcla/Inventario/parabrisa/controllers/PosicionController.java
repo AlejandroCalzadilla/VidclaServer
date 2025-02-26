@@ -1,7 +1,7 @@
 package org.mailgrupo13.vidcla.Inventario.parabrisa.controllers;
 
 import org.mailgrupo13.vidcla.Inventario.parabrisa.dto.PosicionPDTO;
-import org.mailgrupo13.vidcla.Inventario.parabrisa.services.interfaces.PosicionPService;
+import org.mailgrupo13.vidcla.Inventario.parabrisa.services.PosicionPService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;

@@ -1,7 +1,8 @@
-package org.mailgrupo13.vidcla.Inventario.almacen.services;
+package org.mailgrupo13.vidcla.Inventario.almacen.services.impl;
 import org.mailgrupo13.vidcla.Inventario.almacen.repositories.AlmacenRepository;
 import org.mailgrupo13.vidcla.Inventario.almacen.dto.AlmacenDTO;
 import org.mailgrupo13.vidcla.Inventario.almacen.entities.Almacen;
+import org.mailgrupo13.vidcla.Inventario.almacen.services.AlmacenService;
 import org.mailgrupo13.vidcla.validations.ResourceAlreadyExistsException;
 import org.mailgrupo13.vidcla.validations.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,7 @@ import java.util.UUID;
 
 
 @Service
-public class AlmacenServiceImpl implements AlmacenService{
+public class AlmacenServiceImpl implements AlmacenService {
 
 
     @Autowired
@@ -31,19 +32,14 @@ public class AlmacenServiceImpl implements AlmacenService{
     @Override
     public ResponseEntity<List<AlmacenDTO>> findAll() {
         List<Almacen> categorias = AlmacenRepository.findAll();
-        if (categorias.isEmpty()) {
-            return ResponseEntity.noContent().build(); //204  np content
-        }
         List<AlmacenDTO> categoriasDTO = new ArrayList<>();
+
         for (Almacen categoria : categorias) {
             categoriasDTO.add(convertToDTO(categoria));
         }
-        return ResponseEntity.ok(categoriasDTO); //200 ok
+        return ResponseEntity.ok(categoriasDTO);
+
     }
-
-
-
-
 
 
 
@@ -56,17 +52,13 @@ public class AlmacenServiceImpl implements AlmacenService{
 
 
 
-
-
-
-
     @Override
     public AlmacenDTO create(AlmacenDTO almacenDTO) {;
         Optional<Almacen> existingCategoria = AlmacenRepository.findByNombre(almacenDTO.getNombre());
         if (existingCategoria.isPresent()) {
             throw new ResourceAlreadyExistsException("Almacen con nombre " + almacenDTO.getNombre() + " ya existe");
         }
-        Almacen Almacen = convertToEntity(almacenDTO);
+        Almacen Almacen = mapToEntity(almacenDTO);
         Almacen = AlmacenRepository.save(Almacen);
         System.out.println("Almacen creado: "+Almacen );
         return convertToDTO(Almacen);
@@ -110,10 +102,6 @@ public class AlmacenServiceImpl implements AlmacenService{
 
 
 
-    private Almacen findAlmacenById(UUID id) {
-        return AlmacenRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Almacen con id " + id + " no encontrado"));
-    }
 
 
     @Override
@@ -128,7 +116,7 @@ public class AlmacenServiceImpl implements AlmacenService{
 
 
 
-    public  Almacen convertToEntity(AlmacenDTO AlmacenDTO){
+    public  Almacen mapToEntity(AlmacenDTO AlmacenDTO){
         Almacen categoriaP=new Almacen();
         categoriaP.setId(AlmacenDTO.getId());
         categoriaP.setNombre(AlmacenDTO.getNombre());
