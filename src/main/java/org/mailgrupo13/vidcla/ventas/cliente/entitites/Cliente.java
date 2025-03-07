@@ -1,6 +1,10 @@
 package org.mailgrupo13.vidcla.ventas.cliente.entitites;
 import jakarta.persistence.*;
 import  lombok.*;
+import org.mailgrupo13.vidcla.compras.notacompra.entities.NotaCompra;
+import org.mailgrupo13.vidcla.ventas.notaventa.entities.NotaVenta;
+
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -36,6 +40,10 @@ public class Cliente {
 
     @Column(name="nit", nullable = true,unique = true)
     private String nit;
+
+    @OneToMany(mappedBy = "cliente")
+    private List<NotaVenta> notasVenta;
+
 
 
 

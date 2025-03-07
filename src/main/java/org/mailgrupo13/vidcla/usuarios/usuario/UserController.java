@@ -22,6 +22,7 @@ public class UserController {
 
     @GetMapping
     public List<User> list() {
+
         return service.findAll();
     }
 
@@ -41,6 +42,19 @@ public class UserController {
         user.setAdmin(true);
         return create(user, result);
     }
+
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> update(@Valid @RequestBody User user, BindingResult result, @PathVariable Long id) {
+        System.out.println("llega a user update");
+        if (result.hasFieldErrors()) {
+            return validation(result);
+        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.update(id, user));
+    }
+
+
+
 
 
 

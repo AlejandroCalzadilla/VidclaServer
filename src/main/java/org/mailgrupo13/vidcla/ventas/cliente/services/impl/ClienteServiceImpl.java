@@ -8,6 +8,7 @@ import org.mailgrupo13.vidcla.ventas.cliente.services.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -36,7 +37,7 @@ public class ClienteServiceImpl implements ClienteService {
     @Override
     public List<ClienteDTO> findAll() {
        List<Cliente> clientes= clienteRepository.findAll();
-       List<ClienteDTO> clienteDTOS = null;
+       List<ClienteDTO> clienteDTOS=new ArrayList<>();
        for (Cliente cliente:clientes){
            clienteDTOS.add(mapToDTO(cliente));
        }
@@ -75,11 +76,11 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Override
     public ClienteDTO mapToDTO(Cliente cliente) {
-        return null;
+        return clienteMapper.mapToClienteDTO(cliente);
     }
 
     @Override
     public Cliente mapToEntity(ClienteDTO clienteDTO) {
-        return null;
+        return clienteMapper.mapToCliente(clienteDTO);
     }
 }

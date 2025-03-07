@@ -4,6 +4,7 @@ import org.mailgrupo13.vidcla.usuarios.usuario.Role;
 import org.mailgrupo13.vidcla.usuarios.usuario.RoleRepository;
 import org.mailgrupo13.vidcla.usuarios.usuario.User;
 import org.mailgrupo13.vidcla.usuarios.usuario.UserRepository;
+import org.mailgrupo13.vidcla.validations.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -31,6 +32,9 @@ public class UserServiceImpl implements UserService {
         return (List<User>) repository.findAll();
     }
 
+
+
+
     @Override
     @Transactional
     public User save(User user) {
@@ -39,6 +43,7 @@ public class UserServiceImpl implements UserService {
         List<Role> roles = new ArrayList<>();
 
         optionalRoleUser.ifPresent(roles::add);
+
 
         if (user.isAdmin()) {
             Optional<Role> optionalRoleAdmin = roleRepository.findByName("ROLE_ADMIN");
@@ -50,10 +55,43 @@ public class UserServiceImpl implements UserService {
         return repository.save(user);
     }
 
+
+    @Override
+    @Transactional
+    public User update(Long id, User userDetails) {
+        User user = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User no encontrado con  " + id));
+
+        user.setUsername(userDetails.getUsername());
+        user.setPassword(passwordEncoder.encode(userDetails.getPassword()));
+        user.setEnabled(userDetails.isEnabled());
+
+        List<Role> roles = new ArrayList<>();
+        roleRepository.findByName("ROLE_USER").ifPresent(roles::add);
+
+        if (userDetails.isAdmin()) {
+            roleRepository.findByName("ROLE_ADMIN").ifPresent(roles::add);
+        }
+
+        user.setRoles(roles);
+
+        return repository.save(user);
+    }
+
+
+
+
+
+
+
     @Override
     public boolean existsByUsername(String username) {
         return repository.existsByUsername(username);
     }
+
+
+
+
 
 
 }

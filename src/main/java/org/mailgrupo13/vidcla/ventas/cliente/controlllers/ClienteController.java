@@ -17,18 +17,19 @@ public class ClienteController {
     @Autowired
     ClienteService clienteService;
 
-    @GetMapping("/clientes")
+    @GetMapping("")
     public List<ClienteDTO> findAll(){
         return clienteService.findAll();
     }
 
-    @GetMapping("/clientes/{id}")
+    @GetMapping("/{id}")
     public ClienteDTO findById(UUID id){
         return clienteService.findById(id);
     }
 
     @PostMapping("")
-    public ClienteDTO create(ClienteDTO clienteDTO){
+    public ClienteDTO create(@RequestBody ClienteDTO clienteDTO){
+        System.out.println("llega a cliente create"+clienteDTO.toString());
         return clienteService.create(clienteDTO);
     }
 
